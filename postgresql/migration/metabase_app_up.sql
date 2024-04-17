@@ -1,0 +1,13 @@
+-- Akun
+CREATE TABLE IF NOT EXISTS akun (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    foto VARCHAR(255) NOT NULL,
+    role INT NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP WITH TIME ZONE,
+    updater UUID,
+    FOREIGN KEY (role) REFERENCES ref.role (id)
+);
