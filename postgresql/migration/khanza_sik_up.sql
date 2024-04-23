@@ -290,7 +290,7 @@ CREATE TABLE IF NOT EXISTS sik.pesanan_barang_medis (
     harga_satuan FLOAT NOT NULL,
     jumlah_pesanan INT NOT NULL,
     jumlah_diterima INT NOT NULL DEFAULT 0,
-    kadaluwarsa DATE NOT NULL,
+    kadaluwarsa DATE,
     no_batch VARCHAR(20),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP, 
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP, 
