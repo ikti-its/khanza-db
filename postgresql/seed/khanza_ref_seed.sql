@@ -4,11 +4,9 @@ INSERT INTO role (id, nama) VALUES (1337, 'Developer'), (1, 'Admin'), (2, 'Pegaw
 -- Modul C (Fathur, Ruben)
 -- Jabatan
 INSERT INTO jabatan (id, nama) VALUES (1000, 'Testing');
--- INSERT INTO jabatan (id, nama) VALUES (1, 'Direktur'), (2, 'Manager'), (3, 'Supervisor'), (4, 'Staff');
 
 -- Departemen
 INSERT INTO departemen (id, nama) VALUES (1000, 'Testing');
--- INSERT INTO departemen (id, nama) VALUES (1, 'HRD'), (2, 'Marketing'), (3, 'Keuangan'), (4, 'Operasional');
 
 -- Status Aktif Pegawai
 INSERT INTO status_aktif_pegawai (id, nama) VALUES ('A', 'Aktif'), ('BH', 'Berhenti dengan Hormat'), ('C', 'Cuti'), ('R', 'Resign'), ('BT', 'Berhenti dengan Tidak Hormat'), ('P', 'Pensiun'), ('W', 'Wafat');

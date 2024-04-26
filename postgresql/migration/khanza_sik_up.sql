@@ -150,7 +150,7 @@ CREATE TABLE IF NOT EXISTS cuti (
 -- Barang Medis
 CREATE TYPE sik.jenis_barang_medis AS ENUM ('Obat', 'Alat Kesehatan', 'Bahan Habis Pakai', 'Darah');
 
-CREATE TABLE IF NOT EXISTS sik.barang_medis (
+CREATE TABLE IF NOT EXISTS barang_medis (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     nama VARCHAR(100) NOT NULL,
     jenis jenis_barang_medis NOT NULL,
@@ -166,7 +166,7 @@ CREATE TABLE IF NOT EXISTS sik.barang_medis (
 -- Obat
 CREATE TYPE sik.satuan_obat AS ENUM ('tablet', 'kapsul', 'ampul', 'botol', 'tube', 'vial', 'injeksi');
 
-CREATE TABLE IF NOT EXISTS sik.obat (
+CREATE TABLE IF NOT EXISTS obat (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     id_barang_medis UUID NOT NULL,
     id_industri_farmasi INT NOT NULL,
@@ -194,7 +194,7 @@ CREATE TABLE IF NOT EXISTS sik.obat (
 -- Alat Kesehatan
 CREATE TYPE merek_alat_kesehatan AS ENUM ('Omron','Philips', 'GE Healthcare', 'Siemens Healthineers', 'Medtronic', 'Johnson & Johnson', 'Becton, Dickinson and Company (BD)', 'Stryker', 'Boston Scientific', 'Olympus Corporation', 'Roche Diagnostics');
 
-CREATE TABLE IF NOT EXISTS sik.alat_kesehatan (
+CREATE TABLE IF NOT EXISTS alat_kesehatan (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     id_barang_medis UUID NOT NULL,
     merek merek_alat_kesehatan NOT NULL,
@@ -209,7 +209,7 @@ CREATE TABLE IF NOT EXISTS sik.alat_kesehatan (
 -- Bahan Habis Pakai
 CREATE TYPE satuan_bahan_habis_pakai AS ENUM ('pasang', 'kotak', 'paket', 'item', 'botol', 'tabung', 'ml');
 
-CREATE TABLE IF NOT EXISTS sik.bahan_habis_pakai (
+CREATE TABLE IF NOT EXISTS bahan_habis_pakai (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     id_barang_medis UUID NOT NULL,
     satuan satuan_bahan_habis_pakai NOT NULL,
@@ -224,7 +224,7 @@ CREATE TABLE IF NOT EXISTS sik.bahan_habis_pakai (
 );
 
 -- Darah
-CREATE TABLE IF NOT EXISTS sik.darah (
+CREATE TABLE IF NOT EXISTS darah (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     id_barang_medis UUID NOT NULL,
     keterangan TEXT,
@@ -240,7 +240,7 @@ CREATE TABLE IF NOT EXISTS sik.darah (
 -- Pengajuan Barang Medis
 CREATE TYPE status_pesanan AS ENUM ('0', '1', '2', '3', '4', '5'); -- Menunggu persetujuan,  Pengajuan Ditolak, Pengajuan disetujui, Dalam pemesanan, Barang telah sampai, Tagihan telah dibayar
 
-CREATE TABLE IF NOT EXISTS sik.pengajuan_barang_medis (
+CREATE TABLE IF NOT EXISTS pengajuan_barang_medis (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     tanggal_pengajuan DATE DEFAULT CURRENT_DATE,
     nomor_pengajuan VARCHAR(20) NOT NULL UNIQUE,
@@ -265,7 +265,7 @@ CREATE TABLE IF NOT EXISTS sik.pengajuan_barang_medis (
 -- Persetujuan pengajuan
 CREATE TYPE status_persetujuan AS ENUM ('Disetujui', 'Ditolak');
 
-CREATE TABLE IF NOT EXISTS sik.persetujuan_pengajuan (
+CREATE TABLE IF NOT EXISTS persetujuan_pengajuan (
     id_pengajuan UUID PRIMARY KEY,
     status status_persetujuan NOT NULL,
     status_apoteker status_persetujuan,
@@ -283,7 +283,7 @@ CREATE TABLE IF NOT EXISTS sik.persetujuan_pengajuan (
 );
 
 -- Pesanan Barang Medis
-CREATE TABLE IF NOT EXISTS sik.pesanan_barang_medis (
+CREATE TABLE IF NOT EXISTS pesanan_barang_medis (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     id_pengajuan UUID NOT NULL,
     id_barang_medis UUID NOT NULL,
@@ -302,7 +302,7 @@ CREATE TABLE IF NOT EXISTS sik.pesanan_barang_medis (
 );
 
 -- Pemesanan Barang Medis
-CREATE TABLE IF NOT EXISTS sik.pemesanan_barang_medis (
+CREATE TABLE IF NOT EXISTS pemesanan_barang_medis (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     tanggal_pesan DATE NOT NULL,
     no_pemesanan VARCHAR(20) NOT NULL,
@@ -318,7 +318,7 @@ CREATE TABLE IF NOT EXISTS sik.pemesanan_barang_medis (
 );
 
 -- Penerimaan Barang Medis
-CREATE TABLE IF NOT EXISTS sik.penerimaan_barang_medis (
+CREATE TABLE IF NOT EXISTS penerimaan_barang_medis (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     id_pengajuan UUID NOT NULL,
     id_pemesanan UUID NOT NULL,
@@ -340,7 +340,7 @@ CREATE TABLE IF NOT EXISTS sik.penerimaan_barang_medis (
 );
 
 -- Bayar Tagihan Barang Medis
-CREATE TABLE IF NOT EXISTS sik.tagihan_barang_medis (
+CREATE TABLE IF NOT EXISTS tagihan_barang_medis (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     id_pengajuan UUID NOT NULL,
     id_pemesanan UUID NOT NULL,
@@ -364,7 +364,7 @@ CREATE TABLE IF NOT EXISTS sik.tagihan_barang_medis (
 );
 
 -- Stok Keluar Barang Medis
-CREATE TABLE IF NOT EXISTS sik.stok_keluar_barang_medis (
+CREATE TABLE IF NOT EXISTS stok_keluar_barang_medis (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     no_keluar VARCHAR(20) NOT NULL,
     id_barang_medis UUID NOT NULL,

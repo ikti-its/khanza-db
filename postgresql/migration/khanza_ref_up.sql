@@ -70,50 +70,40 @@ CREATE TABLE IF NOT EXISTS industri_farmasi (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
-INSERT INTO industri_farmasi (id, kode, nama, alamat, kota, telepon) VALUES ('1000', 'KLBF', 'Kalbe Farma', 'Jln. jalan', 'Jakarta','0812312312');
-
 -- Jenis Obat
-CREATE TABLE IF NOT EXISTS ref.jenis_obat (
+CREATE TABLE IF NOT EXISTS jenis_obat (
     id INT PRIMARY KEY,
     nama VARCHAR(50) NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
-
-INSERT INTO ref.jenis_obat (id, nama) VALUES ('1000', 'Obat Oral'), ('2000', 'Obat Topikal'), ('3000', 'Obat Injeksi'), ('4000', 'Obat Sublingual'), ('5000', 'Obat Infus');
 
 -- Kategori Obat
-CREATE TABLE IF NOT EXISTS ref.kategori_obat (
+CREATE TABLE IF NOT EXISTS kategori_obat (
     id INT PRIMARY KEY,
     nama VARCHAR(50) NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
-
-INSERT INTO ref.kategori_obat (id, nama) VALUES ('1000', 'Obat Paten'), ('2000', 'Obat Generik'), ('3000', 'Obat Merek'), ('4000', 'Obat Eksklusif'), ('5000', 'Obat Bebas Paten');
 
 -- Golongan Obat
-CREATE TABLE IF NOT EXISTS ref.golongan_obat (
+CREATE TABLE IF NOT EXISTS golongan_obat (
     id INT PRIMARY KEY,
     nama VARCHAR(50) NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
-
-INSERT INTO ref.golongan_obat (id, nama) VALUES ('1000', 'Analgesik'), ('2000', 'Antibiotik'), ('3000', 'Antijamur'), ('4000', 'Antivirus'), ('5000', 'Antasida');
 
 -- Ruangan
-CREATE TABLE IF NOT EXISTS ref.ruangan (
+CREATE TABLE IF NOT EXISTS ruangan (
     id INT PRIMARY KEY,
     nama VARCHAR(50) NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
-INSERT INTO ref.ruangan (id, nama) VALUES ('1000', 'VIP 1'), ('2000', 'VIP 2'), ('3000', 'VVIP 1'), ('4000', 'VVIP 2'), ('5000', 'Gudang Farmasi');
-
 -- Supplier Barang Medis
-CREATE TABLE IF NOT EXISTS ref.supplier_barang_medis (
+CREATE TABLE IF NOT EXISTS supplier_barang_medis (
     id INT PRIMARY KEY,
     nama VARCHAR(50) NOT NULL,
     alamat VARCHAR(255) NOT NULL,
@@ -125,15 +115,11 @@ CREATE TABLE IF NOT EXISTS ref.supplier_barang_medis (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
-INSERT INTO ref.supplier_barang_medis (id, nama, alamat, no_telp, kota, nama_bank, no_rekening) VALUES ('1', 'Mitra', 'Jln. Benar', '08234234','Jakarta', 'BCA','8123123');
-
 -- Akun Bayar
-CREATE TABLE IF NOT EXISTS ref.akun_bayar (
+CREATE TABLE IF NOT EXISTS akun_bayar (
     id INT PRIMARY KEY,
     nama VARCHAR(50) NOT NULL,
     nomor_rekening VARCHAR(50) NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
-
-INSERT INTO ref.akun_bayar (id, nama, nomor_rekening) VALUES ('1000', 'Cash', '-'), ('2000', 'Bank Mandiri', '12308123123'), ('3000', 'Bank BCA', '12208123123');
