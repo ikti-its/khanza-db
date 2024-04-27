@@ -263,11 +263,11 @@ CREATE TABLE IF NOT EXISTS pengajuan_barang_medis (
 );
 
 -- Persetujuan pengajuan
-CREATE TYPE status_persetujuan AS ENUM ('Disetujui', 'Ditolak');
+CREATE TYPE status_persetujuan AS ENUM ('Menunggu Persetujuan', 'Disetujui', 'Ditolak');
 
 CREATE TABLE IF NOT EXISTS persetujuan_pengajuan (
     id_pengajuan UUID PRIMARY KEY,
-    status status_persetujuan NOT NULL,
+    status status_persetujuan NOT NULL DEFAULT 'Menunggu Persetujuan',
     status_apoteker status_persetujuan,
     status_keuangan status_persetujuan,
     id_apoteker UUID,
