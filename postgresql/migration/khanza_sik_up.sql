@@ -46,8 +46,6 @@ CREATE TABLE IF NOT EXISTS alamat (
     alamat VARCHAR(255) NOT NULL,
     alamat_lat NUMERIC NOT NULL DEFAULT 7.2575,
     alamat_lon NUMERIC NOT NULL DEFAULT 112.7521,
-    kota VARCHAR(255) NOT NULL,
-    kode_pos VARCHAR(5) NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     deleted_at TIMESTAMP WITH TIME ZONE,
@@ -263,11 +261,11 @@ CREATE TABLE IF NOT EXISTS pengajuan_barang_medis (
 );
 
 -- Persetujuan pengajuan
-CREATE TYPE status_persetujuan AS ENUM ('Disetujui', 'Ditolak');
+CREATE TYPE status_persetujuan AS ENUM ('Menunggu Persetujuan', 'Disetujui', 'Ditolak');
 
 CREATE TABLE IF NOT EXISTS persetujuan_pengajuan (
     id_pengajuan UUID PRIMARY KEY,
-    status status_persetujuan NOT NULL,
+    status status_persetujuan NOT NULL DEFAULT 'Menunggu Persetujuan',
     status_apoteker status_persetujuan,
     status_keuangan status_persetujuan,
     id_apoteker UUID,
