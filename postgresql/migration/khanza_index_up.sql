@@ -19,7 +19,6 @@ CREATE INDEX IF NOT EXISTS idx_pegawai_deleted_at ON pegawai (deleted_at);
 CREATE INDEX IF NOT EXISTS idx_alamat_alamat ON alamat (alamat);
 CREATE INDEX IF NOT EXISTS idx_alamat_alamat_lat ON alamat (alamat_lat);
 CREATE INDEX IF NOT EXISTS idx_alamat_alamat_lon ON alamat (alamat_lon);
-CREATE INDEX IF NOT EXISTS idx_alamat_kode_pos ON alamat (kode_pos);
 CREATE INDEX IF NOT EXISTS idx_alamat_updated_at ON alamat (updated_at);
 CREATE INDEX IF NOT EXISTS idx_alamat_deleted_at ON alamat (deleted_at);
 
