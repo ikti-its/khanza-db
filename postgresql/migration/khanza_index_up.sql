@@ -68,6 +68,7 @@ CREATE INDEX IF NOT EXISTS idx_cuti_deleted_at ON cuti (deleted_at);
 -- Modul D (Leo)
 -- Barang Medis
 CREATE INDEX IF NOT EXISTS idx_barang_medis_jenis ON barang_medis (jenis);
+CREATE INDEX IF NOT EXISTS idx_barang_medis_satuan ON barang_medis (id_satuan);
 CREATE INDEX IF NOT EXISTS idx_barang_medis_updated_at ON barang_medis (updated_at);
 CREATE INDEX IF NOT EXISTS idx_barang_medis_deleted_at ON barang_medis (deleted_at);
 
