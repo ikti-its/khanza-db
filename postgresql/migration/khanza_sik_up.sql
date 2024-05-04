@@ -152,25 +152,24 @@ CREATE TABLE IF NOT EXISTS barang_medis (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     nama VARCHAR(100) NOT NULL,
     jenis jenis_barang_medis NOT NULL,
+    id_satuan INT NOT NULL DEFAULT 0,
     harga FLOAT NOT NULL DEFAULT 0,
     stok INT NOT NULL DEFAULT 0,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     deleted_at TIMESTAMP WITH TIME ZONE,
     updater UUID,
+    FOREIGN KEY (id_satuan) REFERENCES ref.satuan_barang_medis (id)
     FOREIGN KEY (updater) REFERENCES akun (id)
 );
 
 -- Obat
-CREATE TYPE sik.satuan_obat AS ENUM ('tablet', 'kapsul', 'ampul', 'botol', 'tube', 'vial', 'injeksi');
-
 CREATE TABLE IF NOT EXISTS obat (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     id_barang_medis UUID NOT NULL,
     id_industri_farmasi INT NOT NULL,
     kandungan VARCHAR(100) NOT NULL,
-    id_satuan_besar satuan_obat NOT NULL,
-    id_satuan_kecil satuan_obat NOT NULL,
+    id_satuan_kecil INT NOT NULL DEFAULT 0,
     isi INT NOT NULL,
     kapasitas INT NOT NULL,
     id_jenis INT NOT NULL,
@@ -182,6 +181,7 @@ CREATE TABLE IF NOT EXISTS obat (
     deleted_at TIMESTAMP WITH TIME ZONE,
     updater UUID,
     FOREIGN KEY (id_barang_medis) REFERENCES barang_medis (id),
+    FOREIGN KEY (id_satuan_kecil) REFERENCES ref.satuan_barang_medis (id),
     FOREIGN KEY (id_industri_farmasi) REFERENCES ref.industri_farmasi (id),
     FOREIGN KEY (id_jenis) REFERENCES ref.jenis_obat (id),
     FOREIGN KEY (id_kategori) REFERENCES ref.kategori_obat (id),
@@ -205,12 +205,9 @@ CREATE TABLE IF NOT EXISTS alat_kesehatan (
 );
 
 -- Bahan Habis Pakai
-CREATE TYPE satuan_bahan_habis_pakai AS ENUM ('pasang', 'kotak', 'paket', 'item', 'botol', 'tabung', 'ml');
-
 CREATE TABLE IF NOT EXISTS bahan_habis_pakai (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     id_barang_medis UUID NOT NULL,
-    satuan satuan_bahan_habis_pakai NOT NULL,
     jumlah INT NOT NULL,
     kadaluwarsa DATE NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
@@ -222,9 +219,11 @@ CREATE TABLE IF NOT EXISTS bahan_habis_pakai (
 );
 
 -- Darah
+CREATE TYPE jenis_darah AS ENUM ('Whole Blood (WB)', 'Packed Red Cell (PRC)', 'Thrombocyte Concentrate (TC)', 'Fresh Frozen Plasma (FFP)', 'Cryoprecipitate atau AHF', 'Leucodepleted (LD)', 'Leucoreduced (LR)');
 CREATE TABLE IF NOT EXISTS darah (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     id_barang_medis UUID NOT NULL,
+    jenis jenis_darah NOT NULL,
     keterangan TEXT,
     kadaluwarsa DATE NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
@@ -236,7 +235,7 @@ CREATE TABLE IF NOT EXISTS darah (
 );
 
 -- Pengajuan Barang Medis
-CREATE TYPE status_pesanan AS ENUM ('0', '1', '2', '3', '4', '5'); -- Menunggu persetujuan,  Pengajuan Ditolak, Pengajuan disetujui, Dalam pemesanan, Barang telah sampai, Tagihan telah dibayar
+CREATE TYPE status_pesanan AS ENUM ('0', '1', '2', '3', '4', '5', '6'); -- Menunggu persetujuan,  Pengajuan Ditolak, Pengajuan disetujui, Dalam pemesanan, Barang telah sampai, Tagihan belum lunas, Tagihan telah dibayar
 
 CREATE TABLE IF NOT EXISTS pengajuan_barang_medis (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -285,6 +284,7 @@ CREATE TABLE IF NOT EXISTS pesanan_barang_medis (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     id_pengajuan UUID NOT NULL,
     id_barang_medis UUID NOT NULL,
+    id_satuan INT NOT NULL DEFAULT 0,
     harga_satuan FLOAT NOT NULL,
     jumlah_pesanan INT NOT NULL,
     jumlah_diterima INT NOT NULL DEFAULT 0,
@@ -295,6 +295,7 @@ CREATE TABLE IF NOT EXISTS pesanan_barang_medis (
     deleted_at TIMESTAMP WITH TIME ZONE,
     updater UUID, 
     FOREIGN KEY (id_pengajuan) REFERENCES pengajuan_barang_medis (id),
+    FOREIGN KEY (id_satuan) REFERENCES ref.satuan_barang_medis (id),
     FOREIGN KEY (id_barang_medis) REFERENCES barang_medis (id),
     FOREIGN KEY (updater) REFERENCES akun (id)
 );
@@ -364,16 +365,30 @@ CREATE TABLE IF NOT EXISTS tagihan_barang_medis (
 -- Stok Keluar Barang Medis
 CREATE TABLE IF NOT EXISTS stok_keluar_barang_medis (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id_transaksi_keluar_barang_medis UUID NOT NULL,
     no_keluar VARCHAR(20) NOT NULL,
-    id_barang_medis UUID NOT NULL,
     id_pegawai UUID NOT NULL, 
     tanggal_stok_keluar DATE NOT NULL DEFAULT CURRENT_DATE,
-    jumlah_keluar INT NOT NULL,
     keterangan VARCHAR(255), 
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     deleted_at TIMESTAMP WITH TIME ZONE,
     updater UUID, 
+    FOREIGN KEY (id_transaksi_keluar_barang_medis) REFERENCES transaksi_keluar_barang_medis (id),
     FOREIGN KEY (id_pegawai) REFERENCES pegawai (id),
+    FOREIGN KEY (updater) REFERENCES akun (id)
+);
+
+--Transaksi Keluar Barang Medis
+CREATE TABLE IF NOT EXISTS transaksi_keluar_barang_medis (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id_barang_medis UUID NOT NULL,
+    no_faktur VARCHAR(20),
+    jumlah_keluar INT NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP WITH TIME ZONE,
+    updater UUID, 
+    FOREIGN KEY (id_barang_medis) REFERENCES barang_medis (id)
     FOREIGN KEY (updater) REFERENCES akun (id)
 );
