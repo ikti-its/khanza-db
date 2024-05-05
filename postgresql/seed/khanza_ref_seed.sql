@@ -24,6 +24,9 @@ INSERT INTO alasan_cuti (id, nama) VALUES ('S', 'Sakit'), ('I', 'Izin'), ('CT', 
 -- Industri Farmasi
 INSERT INTO industri_farmasi (id, kode, nama, alamat, kota, telepon) VALUES ('1000', 'KLBF', 'Kalbe Farma', 'Jln. jalan', 'Jakarta','0812312312');
 
+-- Satuan Barang Medis
+INSERT INTO satuan_barang_medis (id, nama) VALUES ('0', '-'), ('1', 'pcs'), ('2', 'tablet'), ('3', 'kapsul'), ('4', 'ampul'), ('5', 'botol'), ('6', 'tube'), ('7', 'pasang'), ('8', 'kotak'), ('9', 'item');
+
 -- Jenis Obat
 INSERT INTO jenis_obat (id, nama) VALUES ('1000', 'Obat Oral'), ('2000', 'Obat Topikal'), ('3000', 'Obat Injeksi'), ('4000', 'Obat Sublingual'), ('5000', 'Obat Infus');
 
@@ -40,4 +43,4 @@ INSERT INTO ruangan (id, nama) VALUES ('1000', 'VIP 1'), ('2000', 'VIP 2'), ('30
 INSERT INTO supplier_barang_medis (id, nama, alamat, no_telp, kota, nama_bank, no_rekening) VALUES ('1', 'Mitra', 'Jln. Benar', '08234234','Jakarta', 'BCA','8123123');
 
 -- Akun Bayar
-INSERT INTO akun_bayar (id, nama, nomor_rekening) VALUES ('1000', 'Cash', '-'), ('2000', 'Bank Mandiri', '12308123123'), ('3000', 'Bank BCA', '12208123123');
+INSERT INTO akun_bayar (id, nama_akun, nomor_rekening, nama_rekening, ppn) VALUES ('1000', 'Cash', '-', '-', '0'), ('2000', 'Transfer lewat Virtual Mandiri', '12308123123', 'Bank Mandiri', '1');
