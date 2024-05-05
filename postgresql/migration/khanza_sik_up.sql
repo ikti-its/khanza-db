@@ -383,6 +383,7 @@ CREATE TABLE IF NOT EXISTS stok_keluar_barang_medis (
 CREATE TABLE IF NOT EXISTS transaksi_keluar_barang_medis (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     id_barang_medis UUID NOT NULL,
+    no_batch VARCHAR (20),
     no_faktur VARCHAR(20),
     jumlah_keluar INT NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
