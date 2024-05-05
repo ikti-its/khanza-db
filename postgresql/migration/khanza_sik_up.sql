@@ -390,6 +390,6 @@ CREATE TABLE IF NOT EXISTS transaksi_keluar_barang_medis (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     deleted_at TIMESTAMP WITH TIME ZONE,
     updater UUID, 
-    FOREIGN KEY (id_barang_medis) REFERENCES barang_medis (id)
+    FOREIGN KEY (id_barang_medis) REFERENCES barang_medis (id),
     FOREIGN KEY (updater) REFERENCES akun (id)
 );
