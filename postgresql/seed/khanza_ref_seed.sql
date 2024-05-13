@@ -25,7 +25,7 @@ INSERT INTO alasan_cuti (id, nama) VALUES ('S', 'Sakit'), ('I', 'Izin'), ('CT', 
 INSERT INTO industri_farmasi (id, kode, nama, alamat, kota, telepon) VALUES ('1000', 'KLBF', 'Kalbe Farma', 'Jln. jalan', 'Jakarta','0812312312');
 
 -- Satuan Barang Medis
-INSERT INTO satuan_barang_medis (id, nama) VALUES ('0', '-'), ('1', 'pcs'), ('2', 'tablet'), ('3', 'kapsul'), ('4', 'ampul'), ('5', 'botol'), ('6', 'tube'), ('7', 'pasang'), ('8', 'kotak'), ('9', 'item');
+INSERT INTO satuan_barang_medis (id, nama) VALUES (1, '-'), (2, 'pcs'), (3, 'tablet'), (4, 'kapsul'), (5, 'ampul'), (6, 'botol'), (7, 'tube'), (8, 'pasang'), (9, 'kotak'), (10, 'item');
 
 -- Jenis Obat
 INSERT INTO jenis_obat (id, nama) VALUES ('1000', 'Obat Oral'), ('2000', 'Obat Topikal'), ('3000', 'Obat Injeksi'), ('4000', 'Obat Sublingual'), ('5000', 'Obat Infus');
