@@ -235,7 +235,7 @@ CREATE TABLE IF NOT EXISTS darah (
 );
 
 -- Pengajuan Barang Medis
-CREATE TYPE status_pesanan AS ENUM ('0', '1', '2', '3', '4', '5', '6'); -- Menunggu persetujuan,  Pengajuan Ditolak, Pengajuan disetujui, Dalam pemesanan, Barang telah sampai, Tagihan belum lunas, Tagihan telah dibayar
+CREATE TYPE status_pesanan AS ENUM ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'); -- Menunggu persetujuan,  Pengajuan Ditolak, Pengajuan disetujui, Dalam pemesanan, Barang telah sampai, Tagihan belum lunas, Tagihan telah dibayar
 
 CREATE TABLE IF NOT EXISTS pengajuan_barang_medis (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -274,8 +274,8 @@ CREATE TABLE IF NOT EXISTS persetujuan_pengajuan (
     deleted_at TIMESTAMP WITH TIME ZONE,
     updater UUID,
     FOREIGN KEY (id_pengajuan) REFERENCES pengajuan_barang_medis (id),
-    FOREIGN KEY (id_apoteker) REFERENCES pegawai (id),
-    FOREIGN KEY (id_keuangan) REFERENCES pegawai (id),
+    FOREIGN KEY (id_apoteker) REFERENCES akun (id),
+    FOREIGN KEY (id_keuangan) REFERENCES akun (id),
     FOREIGN KEY (updater) REFERENCES akun (id)
 );
 
@@ -365,7 +365,6 @@ CREATE TABLE IF NOT EXISTS tagihan_barang_medis (
 -- Stok Keluar Barang Medis
 CREATE TABLE IF NOT EXISTS stok_keluar_barang_medis (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    id_transaksi_keluar_barang_medis UUID NOT NULL,
     no_keluar VARCHAR(20) NOT NULL,
     id_pegawai UUID NOT NULL, 
     tanggal_stok_keluar DATE NOT NULL DEFAULT CURRENT_DATE,
@@ -374,14 +373,15 @@ CREATE TABLE IF NOT EXISTS stok_keluar_barang_medis (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     deleted_at TIMESTAMP WITH TIME ZONE,
     updater UUID, 
-    FOREIGN KEY (id_transaksi_keluar_barang_medis) REFERENCES transaksi_keluar_barang_medis (id),
     FOREIGN KEY (id_pegawai) REFERENCES pegawai (id),
     FOREIGN KEY (updater) REFERENCES akun (id)
 );
 
+
 --Transaksi Keluar Barang Medis
 CREATE TABLE IF NOT EXISTS transaksi_keluar_barang_medis (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id_stok_keluar UUID NOT NULL,
     id_barang_medis UUID NOT NULL,
     no_batch VARCHAR (20),
     no_faktur VARCHAR(20),
@@ -390,6 +390,7 @@ CREATE TABLE IF NOT EXISTS transaksi_keluar_barang_medis (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     deleted_at TIMESTAMP WITH TIME ZONE,
     updater UUID, 
+    FOREIGN KEY (id_stok_keluar) REFERENCES stok_keluar_barang_medis (id),
     FOREIGN KEY (id_barang_medis) REFERENCES barang_medis (id),
     FOREIGN KEY (updater) REFERENCES akun (id)
 );
