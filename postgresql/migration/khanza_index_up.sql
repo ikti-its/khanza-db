@@ -94,7 +94,6 @@ CREATE INDEX IF NOT EXISTS idx_darah_deleted_at ON darah (deleted_at);
 
 -- Pengajuan Barang Medis
 CREATE INDEX IF NOT EXISTS idx_pengajuan_barang_medis_tanggal_pengajuan ON pengajuan_barang_medis (tanggal_pengajuan);
-CREATE INDEX IF NOT EXISTS idx_pengajuan_barang_medis_id_supplier ON pengajuan_barang_medis (id_supplier);
 CREATE INDEX IF NOT EXISTS idx_pengajuan_barang_medis_id_pegawai ON pengajuan_barang_medis (id_pegawai);
 CREATE INDEX IF NOT EXISTS idx_pengajuan_barang_medis_updated_at ON pengajuan_barang_medis (updated_at);
 CREATE INDEX IF NOT EXISTS idx_pengajuan_barang_medis_deleted_at ON pengajuan_barang_medis (deleted_at);
@@ -116,6 +115,7 @@ CREATE INDEX IF NOT EXISTS idx_pesanan_barang_medis_deleted_at ON pesanan_barang
 
 -- Pemesanan Barang Medis
 CREATE INDEX IF NOT EXISTS idx_pemesanan_barang_medis_id_pengajuan ON pemesanan_barang_medis (id_pengajuan);
+CREATE INDEX IF NOT EXISTS idx_pemesanan_barang_medis_id_supplier ON pemesanan_barang_medis (id_supplier);
 CREATE INDEX IF NOT EXISTS idx_pemesanan_barang_medis_id_pegawai ON pemesanan_barang_medis (id_pegawai);
 CREATE INDEX IF NOT EXISTS idx_pemesanan_barang_medis_id_updated_at ON pemesanan_barang_medis (updated_at);
 CREATE INDEX IF NOT EXISTS idx_pemesanan_barang_medis_id_deleted_at ON pemesanan_barang_medis (deleted_at);

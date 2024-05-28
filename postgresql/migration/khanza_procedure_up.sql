@@ -50,13 +50,13 @@ EXECUTE FUNCTION trigger_update_jadwal_pegawai_on_delete();
 CREATE OR REPLACE FUNCTION update_status_pengajuan()
 RETURNS TRIGGER AS $$
 BEGIN
-    IF NEW.status_apoteker IS NULL OR NEW.status_keuangan IS NULL THEN
-        NEW.status := 'Menunggu Persetujuan';
-    ELSIF NEW.status_apoteker = 'Ditolak' OR NEW.status_keuangan = 'Ditolak' THEN
-        NEW.status := 'Ditolak';
-    ELSIF NEW.status_apoteker = 'Disetujui' AND NEW.status_keuangan = 'Disetujui' THEN
-        NEW.status := 'Disetujui';
-    END IF;
+    IF NEW.status_apoteker = 'Ditolak' OR NEW.status_keuangan = 'Ditolak' THEN
+    NEW.status := 'Ditolak';
+ELSIF NEW.status_apoteker = 'Disetujui' AND NEW.status_keuangan = 'Disetujui' THEN
+    NEW.status := 'Disetujui';
+ELSE
+    NEW.status := 'Menunggu Persetujuan';
+END IF;
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;
@@ -65,3 +65,29 @@ CREATE TRIGGER trigger_update_status_pengajuan
 BEFORE INSERT OR UPDATE OF status_apoteker, status_keuangan ON persetujuan_pengajuan
 FOR EACH ROW
 EXECUTE FUNCTION update_status_pengajuan();
+
+-- Status Pesanan Pengajuan
+CREATE OR REPLACE FUNCTION update_status_pesanan()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.status = 'Disetujui' THEN
+    UPDATE pengajuan_barang_medis
+    SET status_pesanan = '2'
+    WHERE id = NEW.id_pengajuan;
+ELSIF NEW.status = 'Ditolak' THEN
+    UPDATE pengajuan_barang_medis
+    SET status_pesanan = '1'
+    WHERE id = NEW.id_pengajuan;
+ELSE
+    UPDATE pengajuan_barang_medis
+    SET status_pesanan = '0'
+    WHERE id = NEW.id_pengajuan;
+END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER update_status_trigger
+AFTER UPDATE ON persetujuan_pengajuan
+FOR EACH ROW
+EXECUTE FUNCTION update_status_pesanan();
