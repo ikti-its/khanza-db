@@ -128,13 +128,15 @@ CREATE TABLE IF NOT EXISTS presensi (
 );
 
 -- Cuti
+CREATE TYPE status_cuti AS ENUM ('Ditolak', 'Diproses', 'Diterima');
+
 CREATE TABLE IF NOT EXISTS cuti (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     id_pegawai UUID NOT NULL,
     tanggal_mulai DATE NOT NULL,
     tanggal_selesai DATE NOT NULL,
     id_alasan_cuti VARCHAR(2) NOT NULL,
-    status BOOLEAN DEFAULT FALSE,
+    status status_cuti DEFAULT 'Diproses',
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     deleted_at TIMESTAMP WITH TIME ZONE,
