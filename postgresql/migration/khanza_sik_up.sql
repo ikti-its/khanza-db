@@ -146,6 +146,20 @@ CREATE TABLE IF NOT EXISTS cuti (
     FOREIGN KEY (updater) REFERENCES akun (id)
 );
 
+-- Notifikasi Hubungi Pegawai (Ruben)
+CREATE TABLE IF NOT EXISTS notifikasi_hubungi_pegawai (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id_akun UUID NOT NULL,
+    tanggal_notifikasi DATE NOT NULL DEFAULT CURRENT_DATE,
+    judul VARCHAR(255) NOT NULL,
+    pesan VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP WITH TIME ZONE,
+    updater UUID,
+    FOREIGN KEY (id_akun) REFERENCES akun (id)
+);
+
 -- Modul D (Leo)
 -- Barang Medis
 CREATE TYPE sik.jenis_barang_medis AS ENUM ('Obat', 'Alat Kesehatan', 'Bahan Habis Pakai', 'Darah');

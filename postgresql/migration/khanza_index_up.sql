@@ -65,6 +65,11 @@ CREATE INDEX IF NOT EXISTS idx_cuti_status ON cuti (status);
 CREATE INDEX IF NOT EXISTS idx_cuti_updated_at ON cuti (updated_at);
 CREATE INDEX IF NOT EXISTS idx_cuti_deleted_at ON cuti (deleted_at);
 
+-- Notifikasi Hubungi Pegawai (Ruben)
+CREATE INDEX IF NOT EXISTS idx_notifikasi_hubungi_pegawai_tanggal_notifikasi ON notifikasi_hubungi_pegawai (tanggal_notifikasi);
+CREATE INDEX IF NOT EXISTS idx_notifikasi_hubungi_pegawai_updated_at ON notifikasi_hubungi_pegawai (updated_at);
+CREATE INDEX IF NOT EXISTS idx_notifikasi_hubungi_pegawai_deleted_at ON notifikasi_hubungi_pegawai (deleted_at);
+
 -- Modul D (Leo)
 -- Barang Medis
 CREATE INDEX IF NOT EXISTS idx_barang_medis_jenis ON barang_medis (jenis);
