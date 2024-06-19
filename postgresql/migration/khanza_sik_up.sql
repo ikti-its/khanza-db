@@ -148,17 +148,16 @@ CREATE TABLE IF NOT EXISTS cuti (
 );
 
 -- Notifikasi Hubungi Pegawai (Ruben)
-CREATE TABLE IF NOT EXISTS notifikasi_hubungi_pegawai (
+CREATE TABLE IF NOT EXISTS notifikasi (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    id_akun UUID NOT NULL,
-    tanggal_notifikasi DATE NOT NULL DEFAULT CURRENT_DATE,
+    sender UUID NOT NULL,
+    recipient UUID NOT NULL,
+    tanggal DATE DEFAULT CURRENT_DATE,
     judul VARCHAR(255) NOT NULL,
     pesan VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    deleted_at TIMESTAMP WITH TIME ZONE,
-    updater UUID,
-    FOREIGN KEY (id_akun) REFERENCES akun (id)
+    read BOOLEAN DEFAULT false,
+    FOREIGN KEY (sender) REFERENCES akun (id),
+    FOREIGN KEY (recipient) REFERENCES akun (id)
 );
 
 -- Modul D (Leo)
