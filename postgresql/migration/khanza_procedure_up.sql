@@ -126,3 +126,109 @@ CREATE TRIGGER trigger_update_kadaluwarsa
 AFTER INSERT OR UPDATE ON pesanan_barang_medis
 FOR EACH ROW
 EXECUTE FUNCTION update_kadaluwarsa();
+
+CREATE OR REPLACE FUNCTION update_stok_diterima() RETURNS TRIGGER AS $$
+BEGIN
+    -- Hanya update jika nilai jumlah_diterima berubah
+    IF NEW.jumlah_diterima IS DISTINCT FROM OLD.jumlah_diterima THEN
+        -- Update stok pada tabel barang_medis
+        UPDATE barang_medis
+        SET stok = stok + (NEW.jumlah_diterima - OLD.jumlah_diterima)
+        WHERE id = NEW.id_barang_medis;
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_update_stok_diterima
+AFTER UPDATE ON pesanan_barang_medis
+FOR EACH ROW
+EXECUTE FUNCTION update_stok_diterima();
+
+CREATE OR REPLACE FUNCTION update_stok_keluar() RETURNS TRIGGER AS $$
+BEGIN
+    -- Hanya update jika nilai jumlah_keluar berubah
+    IF NEW.jumlah_keluar IS DISTINCT FROM OLD.jumlah_keluar THEN
+        -- Update stok pada tabel barang_medis
+        UPDATE barang_medis
+        SET stok = stok - (NEW.jumlah_keluar - OLD.jumlah_keluar)
+        WHERE id = NEW.id_barang_medis;
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_update_stok_keluar
+AFTER UPDATE ON transaksi_keluar_barang_medis
+FOR EACH ROW
+EXECUTE FUNCTION update_stok_keluar();
+
+CREATE OR REPLACE FUNCTION insert_stok_diterima() RETURNS TRIGGER AS $$
+BEGIN
+    -- Update stok pada tabel barang_medis hanya jika jumlah_diterima > 0
+    IF NEW.jumlah_diterima > 0 THEN
+        UPDATE barang_medis
+        SET stok = stok + NEW.jumlah_diterima
+        WHERE id = NEW.id_barang_medis;
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_insert_stok_diterima
+AFTER INSERT ON pesanan_barang_medis
+FOR EACH ROW
+EXECUTE FUNCTION insert_stok_diterima();
+
+CREATE OR REPLACE FUNCTION insert_stok_keluar() RETURNS TRIGGER AS $$
+BEGIN
+    -- Update stok pada tabel barang_medis hanya jika jumlah_keluar > 0
+    IF NEW.jumlah_keluar > 0 THEN
+        UPDATE barang_medis
+        SET stok = stok - NEW.jumlah_keluar
+        WHERE id = NEW.id_barang_medis;
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_insert_stok_keluar
+AFTER INSERT ON transaksi_keluar_barang_medis
+FOR EACH ROW
+EXECUTE FUNCTION insert_stok_keluar();
+
+CREATE OR REPLACE FUNCTION soft_delete_update_stok_diterima() RETURNS TRIGGER AS $$
+BEGIN
+    -- Hanya update stok jika kolom deleted_at berubah dari NULL menjadi tidak NULL
+    IF NEW.deleted_at IS NOT NULL AND OLD.deleted_at IS NULL THEN
+        -- Update stok pada tabel barang_medis
+        UPDATE barang_medis
+        SET stok = stok - OLD.jumlah_diterima
+        WHERE id = OLD.id_barang_medis;
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_soft_delete_stok_diterima
+BEFORE UPDATE ON pesanan_barang_medis
+FOR EACH ROW
+EXECUTE FUNCTION soft_delete_update_stok_diterima();
+
+CREATE OR REPLACE FUNCTION soft_delete_update_stok_keluar() RETURNS TRIGGER AS $$
+BEGIN
+    -- Hanya update stok jika kolom deleted_at berubah dari NULL menjadi tidak NULL
+    IF NEW.deleted_at IS NOT NULL AND OLD.deleted_at IS NULL THEN
+        -- Update stok pada tabel barang_medis
+        UPDATE barang_medis
+        SET stok = stok + OLD.jumlah_keluar
+        WHERE id = OLD.id_barang_medis;
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trigger_soft_delete_stok_keluar
+BEFORE UPDATE ON transaksi_keluar_barang_medis
+FOR EACH ROW
+EXECUTE FUNCTION soft_delete_update_stok_keluar();
