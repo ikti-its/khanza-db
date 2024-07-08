@@ -146,5 +146,12 @@ CREATE INDEX IF NOT EXISTS idx_tagihan_barang_medis_deleted_at ON tagihan_barang
 -- Stok Keluar Barang Medis
 CREATE INDEX IF NOT EXISTS idx_stok_keluar_barang_medis_tanggal_stok_keluar ON stok_keluar_barang_medis (tanggal_stok_keluar);
 CREATE INDEX IF NOT EXISTS idx_stok_keluar_barang_medis_id_pegawai ON stok_keluar_barang_medis (id_pegawai);
+CREATE INDEX IF NOT EXISTS idx_stok_keluar_barang_medis_asal_ruangan ON stok_keluar_barang_medis (asal_ruangan);
+CREATE INDEX IF NOT EXISTS idx_stok_keluar_barang_medis_tujuan_ruangan ON stok_keluar_barang_medis (tujuan_ruangan);
 CREATE INDEX IF NOT EXISTS idx_stok_keluar_barang_medis_updated_at ON stok_keluar_barang_medis (updated_at);
 CREATE INDEX IF NOT EXISTS idx_stok_keluar_barang_medis_deleted_at ON stok_keluar_barang_medis (deleted_at);
+
+CREATE INDEX IF NOT EXISTS idx_transaksi_keluar_barang_medis_id_stok_keluar ON transaksi_keluar_barang_medis (id_stok_keluar);
+CREATE INDEX IF NOT EXISTS idx_transaksi_keluar_barang_medis_id_barang_medis ON transaksi_keluar_barang_medis (id_barang_medis);
+CREATE INDEX IF NOT EXISTS idx_transaksi_keluar_barang_medis_updated_at ON transaksi_keluar_barang_medis (updated_at);
+CREATE INDEX IF NOT EXISTS idx_transaksi_keluar_barang_medis_deleted_at ON transaksi_keluar_barang_medis (deleted_at);

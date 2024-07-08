@@ -92,50 +92,6 @@ AFTER UPDATE ON persetujuan_pengajuan
 FOR EACH ROW
 EXECUTE FUNCTION update_status_pesanan();
 
--- Pengecekan kadaluwarsa data dan pesanan
-CREATE OR REPLACE FUNCTION update_kadaluwarsa()
-RETURNS TRIGGER AS $$
-DECLARE
-    closest_expiration DATE;
-BEGIN
-    -- Ambil nilai tanggal kadaluwarsa terdekat yang lebih besar dari atau sama dengan hari ini
-    SELECT MIN(kadaluwarsa) INTO closest_expiration
-    FROM pesanan_barang_medis
-    WHERE id_barang_medis = NEW.id_barang_medis
-      AND kadaluwarsa >= CURRENT_DATE;
-
-    -- Jika closest_expiration NULL, atur ke '0001-01-01'
-    IF closest_expiration IS NULL THEN
-        closest_expiration := '0001-01-01';
-    END IF;
-
-    -- Update tabel obat
-    UPDATE obat
-    SET kadaluwarsa = closest_expiration
-    WHERE id_barang_medis = NEW.id_barang_medis
-      AND (kadaluwarsa = '0001-01-01' OR kadaluwarsa > closest_expiration);
-
-    -- Update tabel bahan_habis_pakai
-    UPDATE bahan_habis_pakai
-    SET kadaluwarsa = closest_expiration
-    WHERE id_barang_medis = NEW.id_barang_medis
-      AND (kadaluwarsa = '0001-01-01' OR kadaluwarsa > closest_expiration);
-
-    -- Update tabel darah
-    UPDATE darah
-    SET kadaluwarsa = closest_expiration
-    WHERE id_barang_medis = NEW.id_barang_medis
-      AND (kadaluwarsa = '0001-01-01' OR kadaluwarsa > closest_expiration);
-
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE TRIGGER trigger_update_kadaluwarsa
-AFTER INSERT OR UPDATE ON pesanan_barang_medis
-FOR EACH ROW
-EXECUTE FUNCTION update_kadaluwarsa();
-
 
 CREATE OR REPLACE FUNCTION update_stok_diterima() RETURNS TRIGGER AS $$
 BEGIN
