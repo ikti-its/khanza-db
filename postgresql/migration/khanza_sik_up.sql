@@ -160,21 +160,6 @@ CREATE TABLE IF NOT EXISTS notifikasi (
     FOREIGN KEY (recipient) REFERENCES akun (id)
 );
 
--- Lokasi Organisasi
-CREATE TABLE IF NOT EXISTS organisasi (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    nama VARCHAR(255) NOT NULL,
-    alamat VARCHAR(255) NOT NULL,
-    latitude NUMERIC NOT NULL,
-    longitude NUMERIC NOT NULL,
-    radius NUMERIC NOT NULL,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    deleted_at TIMESTAMP WITH TIME ZONE,
-    updater UUID,
-    FOREIGN KEY (updater) REFERENCES akun (id)
-);
-
 -- Modul D (Leo)
 -- Barang Medis
 CREATE TYPE sik.jenis_barang_medis AS ENUM ('Obat', 'Alat Kesehatan', 'Bahan Habis Pakai', 'Darah');

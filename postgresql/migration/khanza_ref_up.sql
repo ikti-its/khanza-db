@@ -6,6 +6,18 @@ CREATE TABLE IF NOT EXISTS role (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Organisasi
+CREATE TABLE IF NOT EXISTS organisasi (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    nama VARCHAR(255) NOT NULL,
+    alamat VARCHAR(255) NOT NULL,
+    latitude NUMERIC NOT NULL,
+    longitude NUMERIC NOT NULL,
+    radius NUMERIC NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Modul C (Fathur, Ruben)
 -- Jabatan
 CREATE TABLE IF NOT EXISTS jabatan (
