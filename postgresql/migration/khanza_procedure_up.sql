@@ -46,6 +46,43 @@ WHEN (OLD.deleted_at IS NULL AND NEW.deleted_at IS NOT NULL)
 EXECUTE FUNCTION trigger_update_jadwal_pegawai_on_delete();
 
 -- Modul D (Leo)
+-- Trigger jenis barang medis dengan barang medis
+CREATE OR REPLACE FUNCTION update_related_deleted_at()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF OLD.deleted_at IS NOT DISTINCT FROM NEW.deleted_at THEN
+        RETURN NEW; -- Jika deleted_at tidak berubah, keluar dari fungsi
+    END IF;
+
+    -- Update deleted_at di tabel obat
+    UPDATE obat
+    SET deleted_at = NEW.deleted_at
+    WHERE obat.id_barang_medis = OLD.id;
+
+    -- Update deleted_at di tabel bahan_habis_pakai
+    UPDATE bahan_habis_pakai
+    SET deleted_at = NEW.deleted_at
+    WHERE bahan_habis_pakai.id_barang_medis = OLD.id;
+
+    -- Update deleted_at di tabel alat_kesehatan
+    UPDATE alat_kesehatan
+    SET deleted_at = NEW.deleted_at
+    WHERE alat_kesehatan.id_barang_medis = OLD.id;
+
+    -- Update deleted_at di tabel darah
+    UPDATE darah
+    SET deleted_at = NEW.deleted_at
+    WHERE darah.id_barang_medis = OLD.id;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER update_related_deleted_at_trigger
+AFTER UPDATE OF deleted_at ON barang_medis
+FOR EACH ROW
+EXECUTE FUNCTION update_related_deleted_at();
+
 -- Persetujuan pengajuan
 CREATE OR REPLACE FUNCTION update_status_pengajuan()
 RETURNS TRIGGER AS $$
