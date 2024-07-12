@@ -166,7 +166,7 @@ CREATE TYPE sik.jenis_barang_medis AS ENUM ('Obat', 'Alat Kesehatan', 'Bahan Hab
 
 CREATE TABLE IF NOT EXISTS barang_medis (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    nama VARCHAR(100) NOT NULL,
+    nama VARCHAR(100) NOT NULL UNIQUE,
     jenis jenis_barang_medis NOT NULL,
     id_satuan INT NOT NULL DEFAULT 1,
     harga FLOAT NOT NULL DEFAULT 0,
