@@ -241,7 +241,6 @@ CREATE TABLE IF NOT EXISTS gudang_barang(
     FOREIGN KEY (updater) REFERENCES akun (id)
 );
 
-
 -- Mutasi Barang
 CREATE TABLE IF NOT EXISTS mutasi_barang(
     id_barang_medis UUID,
@@ -249,7 +248,7 @@ CREATE TABLE IF NOT EXISTS mutasi_barang(
     harga FLOAT NOT NULL,
     id_ruangandari INT NOT NULL,
     id_ruanganke INT NOT NULL,
-    tanggal DATE NOT NULL,
+    tanggal TIMESTAMP NOT NULL,
     keterangan VARCHAR(60) NOT NULL DEFAULT '-',
     no_batch VARCHAR(20) NOT NULL,
     no_faktur VARCHAR(20) NOT NULL,

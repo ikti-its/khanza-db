@@ -28,19 +28,19 @@ INSERT INTO industri_farmasi (id, kode, nama, alamat, kota, telepon) VALUES ('10
 INSERT INTO satuan_barang_medis (id, nama) VALUES (1, '-'), (2, 'pcs'), (3, 'tablet'), (4, 'kapsul'), (5, 'ampul'), (6, 'botol'), (7, 'tube'), (8, 'pasang'), (9, 'kotak'), (10, 'item');
 
 -- Jenis Obat
-INSERT INTO jenis_obat (id, nama) VALUES ('1000', 'Obat Oral'), ('2000', 'Obat Topikal'), ('3000', 'Obat Injeksi'), ('4000', 'Obat Sublingual'), ('5000', 'Obat Infus');
+INSERT INTO jenis_barang_medis (id, nama) VALUES ('1000', 'Obat Oral'), ('2000', 'Obat Topikal'), ('3000', 'Obat Injeksi'), ('4000', 'Obat Sublingual'), ('5000', 'Obat Infus');
 
 -- Kategori Obat
-INSERT INTO kategori_obat (id, nama) VALUES ('1000', 'Obat Paten'), ('2000', 'Obat Generik'), ('3000', 'Obat Merek'), ('4000', 'Obat Eksklusif'), ('5000', 'Obat Bebas Paten');
+INSERT INTO kategori_barang_medis (id, nama) VALUES ('1000', 'Obat Paten'), ('2000', 'Obat Generik'), ('3000', 'Obat Merek'), ('4000', 'Obat Eksklusif'), ('5000', 'Obat Bebas Paten');
 
 -- Golongan Obat
-INSERT INTO golongan_obat (id, nama) VALUES ('1000', 'Analgesik'), ('2000', 'Antibiotik'), ('3000', 'Antijamur'), ('4000', 'Antivirus'), ('5000', 'Antasida');
+INSERT INTO golongan_barang_medis (id, nama) VALUES ('1000', 'Analgesik'), ('2000', 'Antibiotik'), ('3000', 'Antijamur'), ('4000', 'Antivirus'), ('5000', 'Antasida');
 
 -- Ruangan
-INSERT INTO ruangan (id, nama) VALUES ('1000', 'VIP 1'), ('2000', 'VIP 2'), ('3000', 'VVIP 1'), ('4000', 'VVIP 2'), ('5000', 'Gudang Farmasi');
+INSERT INTO ruangan (id, nama) VALUES ('1000', 'Gudang'), ('2000', 'Apotek'), ('3000', 'LABORAT'), ('4000', 'HCU'), ('5000', 'ICU'), ('6000', 'IGD'), ('7000', 'Kelas 1'), ('8000', 'Kelas 2'), ('9000', 'Kelas 3'), ('10000', 'Operasi'), ('11000', 'NICU'), ('12000', 'VIP'), ('13000', 'VVIP');
 
 -- Supplier Barang Medis
 INSERT INTO supplier_barang_medis (id, nama, alamat, no_telp, kota, nama_bank, no_rekening) VALUES ('1', 'Mitra', 'Jln. Benar', '08234234','Jakarta', 'BCA','8123123');
 
 -- Akun Bayar
-INSERT INTO akun_bayar (id, nama_akun, nomor_rekening, nama_rekening, ppn) VALUES ('1000', 'Cash', '-', '-', '0'), ('2000', 'Transfer lewat Virtual Mandiri', '12308123123', 'Bank Mandiri', '1');
+-- INSERT INTO akun_bayar (id, nama_akun, nomor_rekening, nama_rekening, ppn) VALUES ('1000', 'Cash', '-', '-', '0'), ('2000', 'Transfer lewat Virtual Mandiri', '12308123123', 'Bank Mandiri', '1');
