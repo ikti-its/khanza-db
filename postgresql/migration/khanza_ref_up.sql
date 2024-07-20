@@ -90,7 +90,7 @@ CREATE TABLE IF NOT EXISTS satuan_barang_medis (
 );
 
 -- Jenis Obat
-CREATE TABLE IF NOT EXISTS jenis_obat (
+CREATE TABLE IF NOT EXISTS jenis_barang_medis (
     id INT PRIMARY KEY,
     nama VARCHAR(50) NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
@@ -98,7 +98,7 @@ CREATE TABLE IF NOT EXISTS jenis_obat (
 );
 
 -- Kategori Obat
-CREATE TABLE IF NOT EXISTS kategori_obat (
+CREATE TABLE IF NOT EXISTS kategori_barang_medis (
     id INT PRIMARY KEY,
     nama VARCHAR(50) NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
@@ -106,7 +106,7 @@ CREATE TABLE IF NOT EXISTS kategori_obat (
 );
 
 -- Golongan Obat
-CREATE TABLE IF NOT EXISTS golongan_obat (
+CREATE TABLE IF NOT EXISTS golongan_barang_medis (
     id INT PRIMARY KEY,
     nama VARCHAR(50) NOT NULL,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
@@ -135,12 +135,12 @@ CREATE TABLE IF NOT EXISTS supplier_barang_medis (
 );
 
 -- Akun Bayar
-CREATE TABLE IF NOT EXISTS akun_bayar (
-    id INT PRIMARY KEY,
-    nama_akun VARCHAR(100) NOT NULL,
-    nomor_rekening VARCHAR(50) NOT NULL,
-    nama_rekening VARCHAR(50) NOT NULL,
-    ppn FLOAT NOT NULL DEFAULT 0,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-);
+-- CREATE TABLE IF NOT EXISTS akun_bayar (
+--     id INT PRIMARY KEY,
+--     nama_akun VARCHAR(100) NOT NULL,
+--     nomor_rekening VARCHAR(50) NOT NULL,
+--     nama_rekening VARCHAR(50) NOT NULL,
+--     ppn FLOAT NOT NULL DEFAULT 0,
+--     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+--     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+-- );
