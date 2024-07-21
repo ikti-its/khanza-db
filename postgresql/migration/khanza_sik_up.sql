@@ -317,7 +317,7 @@ CREATE TABLE IF NOT EXISTS penerimaan_barang_medis (
     FOREIGN KEY (updater) REFERENCES akun (id)
 );
 
--- Detail Penerimaan
+-- Detail penerimaan
 CREATE TYPE status_ubah_master AS ENUM ('0','1');
 CREATE TABLE IF NOT EXISTS detail_penerimaan_barang_medis (
     id_penerimaan UUID NOT NULL,
@@ -338,7 +338,42 @@ CREATE TABLE IF NOT EXISTS detail_penerimaan_barang_medis (
     updater UUID,
     PRIMARY KEY (id_penerimaan, id_barang_medis),
     FOREIGN KEY (id_barang_medis) REFERENCES barang_medis (id),
+    FOREIGN KEY (id_penerimaan) REFERENCES penerimaan_barang_medis (id),
     FOREIGN KEY (id_satuan) REFERENCES ref.satuan_barang_medis (id),
+    FOREIGN KEY (updater) REFERENCES akun (id)
+);
+
+-- Data Batch
+CREATE TYPE status_asal AS ENUM ('Penerimaan','Pengadaan', 'Hibah');
+CREATE TABLE IF NOT EXISTS data_batch (
+    no_batch VARCHAR(20) NOT NULL,
+    no_faktur VARCHAR(20) NOT NULL,
+    id_penerimaan UUID NOT NULL,
+    id_barang_medis UUID NOT NULL,
+    tanggal_datang DATE NOT NULL,
+    kadaluwarsa DATE,
+    asal status_asal NOT NULL,
+    h_dasar FLOAT NOT NULL DEFAULT 0,
+    h_beli FLOAT NOT NULL DEFAULT 0,
+    h_ralan FLOAT NOT NULL DEFAULT 0,
+    h_kelas1 FLOAT NOT NULL DEFAULT 0,
+    h_kelas2 FLOAT NOT NULL DEFAULT 0,
+    h_kelas3 FLOAT NOT NULL DEFAULT 0,
+    h_utama FLOAT NOT NULL DEFAULT 0,
+    h_vip FLOAT NOT NULL DEFAULT 0,
+    h_vvip FLOAT NOT NULL DEFAULT 0,
+    h_beliluar FLOAT NOT NULL DEFAULT 0,
+    h_jualbebas FLOAT NOT NULL DEFAULT 0,
+    h_karyawan FLOAT NOT NULL DEFAULT 0,
+    jumlahbeli INT NOT NULL,
+    sisa INT NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP WITH TIME ZONE,
+    updater UUID, 
+    PRIMARY KEY (id_penerimaan, id_barang_medis),
+    FOREIGN KEY (id_barang_medis) REFERENCES barang_medis (id),
+    FOREIGN KEY (id_penerimaan) REFERENCES penerimaan_barang_medis (id),
     FOREIGN KEY (updater) REFERENCES akun (id)
 );
 -- CREATE TYPE sik.jenis_barang_medis AS ENUM ('Obat', 'Alat Kesehatan', 'Bahan Habis Pakai', 'Darah');
