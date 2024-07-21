@@ -281,7 +281,7 @@ CREATE TABLE IF NOT EXISTS stok_keluar_barang_medis (
 
 
 -- Transaksi Keluar Barang Medis
-CREATE TABLE IF NOT EXISTS transaksi_keluar_barang_medis (
+CREATE TABLE IF NOT EXISTS transaksi_keluar_barang_medis ( --butuh getbyid stok_keluar_barang_medis
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     id_stok_keluar UUID NOT NULL,
     id_barang_medis UUID NOT NULL,
@@ -319,7 +319,7 @@ CREATE TABLE IF NOT EXISTS penerimaan_barang_medis (
 
 -- Detail penerimaan
 CREATE TYPE status_ubah_master AS ENUM ('0','1');
-CREATE TABLE IF NOT EXISTS detail_penerimaan_barang_medis (
+CREATE TABLE IF NOT EXISTS detail_penerimaan_barang_medis ( --getbyid penerimaan_barang_medis
     id_penerimaan UUID NOT NULL,
     id_barang_medis UUID NOT NULL,
     id_satuan INT NOT NULL,
