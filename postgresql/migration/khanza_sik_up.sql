@@ -345,10 +345,9 @@ CREATE TABLE IF NOT EXISTS detail_penerimaan_barang_medis ( --getbyid penerimaan
 
 -- Data Batch
 CREATE TYPE status_asal AS ENUM ('Penerimaan','Pengadaan', 'Hibah');
-CREATE TABLE IF NOT EXISTS data_batch (
+CREATE TABLE IF NOT EXISTS data_batch ( --get by no_batch
     no_batch VARCHAR(20) NOT NULL,
     no_faktur VARCHAR(20) NOT NULL,
-    id_penerimaan UUID NOT NULL,
     id_barang_medis UUID NOT NULL,
     tanggal_datang DATE NOT NULL,
     kadaluwarsa DATE,
@@ -371,9 +370,8 @@ CREATE TABLE IF NOT EXISTS data_batch (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     deleted_at TIMESTAMP WITH TIME ZONE,
     updater UUID, 
-    PRIMARY KEY (id_penerimaan, id_barang_medis),
+    PRIMARY KEY (no_batch, id_barang_medis, no_faktur),
     FOREIGN KEY (id_barang_medis) REFERENCES barang_medis (id),
-    FOREIGN KEY (id_penerimaan) REFERENCES penerimaan_barang_medis (id),
     FOREIGN KEY (updater) REFERENCES akun (id)
 );
 -- CREATE TYPE sik.jenis_barang_medis AS ENUM ('Obat', 'Alat Kesehatan', 'Bahan Habis Pakai', 'Darah');
