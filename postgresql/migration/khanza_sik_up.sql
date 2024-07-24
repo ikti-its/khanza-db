@@ -165,6 +165,7 @@ CREATE TABLE IF NOT EXISTS notifikasi (
 CREATE TABLE IF NOT EXISTS barang_medis (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     kode_barang VARCHAR(20) NOT NULL UNIQUE,
+    kandungan VARCHAR(100) NOT NULL,
     id_industri INT NOT NULL,
     nama VARCHAR(80) NOT NULL,
     id_satbesar INT NOT NULL,
@@ -207,6 +208,7 @@ CREATE TABLE IF NOT EXISTS opname (
     keterangan VARCHAR(60) NOT NULL DEFAULT '-',
     no_batch VARCHAR(20),
     no_faktur VARCHAR(20),
+    PRIMARY KEY (id_barang_medis, id_ruangan),
     FOREIGN KEY (id_barang_medis) REFERENCES barang_medis (id),
     FOREIGN KEY (id_ruangan) REFERENCES ref.ruangan (id)
 );
@@ -216,8 +218,9 @@ CREATE TABLE IF NOT EXISTS gudang_barang(
     id_barang_medis UUID, 
     id_ruangan INT NOT NULL,
     stok INT NOT NULL,
-    no_batch INT NOT NULL,
-    no_faktur INT NOT NULL,
+    no_batch VARCHAR(20),
+    no_faktur VARCHAR(20),
+    PRIMARY KEY (id_barang_medis, id_ruangan),
     FOREIGN KEY (id_barang_medis) REFERENCES barang_medis (id),
     FOREIGN KEY (id_ruangan) REFERENCES ref.ruangan (id)
 );
@@ -231,8 +234,9 @@ CREATE TABLE IF NOT EXISTS mutasi_barang(
     id_ruanganke INT NOT NULL,
     tanggal TIMESTAMP NOT NULL,
     keterangan VARCHAR(60) NOT NULL DEFAULT '-',
-    no_batch VARCHAR(20) NOT NULL,
-    no_faktur VARCHAR(20) NOT NULL,
+    no_batch VARCHAR(20),
+    no_faktur VARCHAR(20),
+    PRIMARY KEY (id_barang_medis),
     FOREIGN KEY (id_barang_medis) REFERENCES barang_medis (id),
     FOREIGN KEY (id_ruangandari) REFERENCES ref.ruangan (id),
     FOREIGN KEY (id_ruanganke) REFERENCES ref.ruangan (id)
