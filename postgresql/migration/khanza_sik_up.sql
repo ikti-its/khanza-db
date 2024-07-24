@@ -188,17 +188,12 @@ CREATE TABLE IF NOT EXISTS barang_medis (
     kadaluwarsa DATE NULL,
     id_kategori INT NULL,
     id_golongan INT NULL,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    deleted_at TIMESTAMP WITH TIME ZONE,
-    updater UUID,
     FOREIGN KEY (id_industri) REFERENCES ref.industri_farmasi (id),
     FOREIGN KEY (id_satbesar) REFERENCES ref.satuan_barang_medis (id),
     FOREIGN KEY (id_satuan) REFERENCES ref.satuan_barang_medis (id),
     FOREIGN KEY (id_jenis) REFERENCES ref.jenis_barang_medis (id),
     FOREIGN KEY (id_kategori) REFERENCES ref.kategori_barang_medis (id),
-    FOREIGN KEY (id_golongan) REFERENCES ref.golongan_barang_medis (id),
-    FOREIGN KEY (updater) REFERENCES akun (id)
+    FOREIGN KEY (id_golongan) REFERENCES ref.golongan_barang_medis (id)
 );
 
 -- Opname
@@ -209,20 +204,11 @@ CREATE TABLE IF NOT EXISTS opname (
     tanggal DATE NOT NULL,
     real INT NOT NULL,
     stok INT NOT NULL DEFAULT 0,
-    selisih INT NOT NULL DEFAULT 0,
-    lebih INT NOT NULL DEFAULT 0,
-    nominal_hilang FLOAT NOT NULL DEFAULT 0,
-    nominal_lebih FLOAT NOT NULL DEFAULT 0,
     keterangan VARCHAR(60) NOT NULL DEFAULT '-',
     no_batch VARCHAR(20),
     no_faktur VARCHAR(20),
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    deleted_at TIMESTAMP WITH TIME ZONE,
-    updater UUID,
     FOREIGN KEY (id_barang_medis) REFERENCES barang_medis (id),
-    FOREIGN KEY (id_ruangan) REFERENCES ref.ruangan (id),
-    FOREIGN KEY (updater) REFERENCES akun (id)
+    FOREIGN KEY (id_ruangan) REFERENCES ref.ruangan (id)
 );
 
 -- Gudang Barang
@@ -232,13 +218,8 @@ CREATE TABLE IF NOT EXISTS gudang_barang(
     stok INT NOT NULL,
     no_batch INT NOT NULL,
     no_faktur INT NOT NULL,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    deleted_at TIMESTAMP WITH TIME ZONE,
-	updater UUID,
     FOREIGN KEY (id_barang_medis) REFERENCES barang_medis (id),
-    FOREIGN KEY (id_ruangan) REFERENCES ref.ruangan (id),
-    FOREIGN KEY (updater) REFERENCES akun (id)
+    FOREIGN KEY (id_ruangan) REFERENCES ref.ruangan (id)
 );
 
 -- Mutasi Barang
@@ -252,14 +233,9 @@ CREATE TABLE IF NOT EXISTS mutasi_barang(
     keterangan VARCHAR(60) NOT NULL DEFAULT '-',
     no_batch VARCHAR(20) NOT NULL,
     no_faktur VARCHAR(20) NOT NULL,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    deleted_at TIMESTAMP WITH TIME ZONE,
-	updater UUID,
     FOREIGN KEY (id_barang_medis) REFERENCES barang_medis (id),
     FOREIGN KEY (id_ruangandari) REFERENCES ref.ruangan (id),
-    FOREIGN KEY (id_ruanganke) REFERENCES ref.ruangan (id),
-    FOREIGN KEY (updater) REFERENCES akun (id)
+    FOREIGN KEY (id_ruanganke) REFERENCES ref.ruangan (id)
 );
 
 -- Stok Keluar
@@ -269,14 +245,9 @@ CREATE TABLE IF NOT EXISTS stok_keluar_barang_medis (
     id_pegawai UUID NOT NULL, 
     tanggal_stok_keluar DATE NOT NULL DEFAULT CURRENT_DATE,
     id_ruangan INT NOT NULL,
-    keterangan VARCHAR(255), 
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    deleted_at TIMESTAMP WITH TIME ZONE,
-    updater UUID, 
+    keterangan VARCHAR(255),
     FOREIGN KEY (id_pegawai) REFERENCES pegawai (id),
-    FOREIGN KEY (id_ruangan) REFERENCES ref.ruangan (id),
-    FOREIGN KEY (updater) REFERENCES akun (id)
+    FOREIGN KEY (id_ruangan) REFERENCES ref.ruangan (id)
 );
 
 
@@ -288,13 +259,8 @@ CREATE TABLE IF NOT EXISTS transaksi_keluar_barang_medis ( --butuh getbyid stok_
     no_batch VARCHAR(20),
     no_faktur VARCHAR(20),
     jumlah_keluar INT NOT NULL,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    deleted_at TIMESTAMP WITH TIME ZONE,
-    updater UUID, 
     FOREIGN KEY (id_stok_keluar) REFERENCES stok_keluar_barang_medis (id),
-    FOREIGN KEY (id_barang_medis) REFERENCES barang_medis (id),
-    FOREIGN KEY (updater) REFERENCES akun (id)
+    FOREIGN KEY (id_barang_medis) REFERENCES barang_medis (id)
 );
 
 -- Penerimaan
@@ -308,13 +274,8 @@ CREATE TABLE IF NOT EXISTS penerimaan_barang_medis (
     tanggal_jthtempo DATE NOT NULL,
     id_pegawai UUID NOT NULL, 
     id_ruangan INT NOT NULL,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    deleted_at TIMESTAMP WITH TIME ZONE,
-    updater UUID, 
     FOREIGN KEY (id_pegawai) REFERENCES pegawai (id),
-    FOREIGN KEY (id_ruangan) REFERENCES ref.ruangan (id),
-    FOREIGN KEY (updater) REFERENCES akun (id)
+    FOREIGN KEY (id_ruangan) REFERENCES ref.ruangan (id)
 );
 
 -- Detail penerimaan
@@ -332,15 +293,10 @@ CREATE TABLE IF NOT EXISTS detail_penerimaan_barang_medis ( --getbyid penerimaan
     jumlah_diterima INT NOT NULL DEFAULT 0,
     kadaluwarsa DATE,
     no_batch VARCHAR(20),
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    deleted_at TIMESTAMP WITH TIME ZONE,
-    updater UUID,
     PRIMARY KEY (id_penerimaan, id_barang_medis),
     FOREIGN KEY (id_barang_medis) REFERENCES barang_medis (id),
     FOREIGN KEY (id_penerimaan) REFERENCES penerimaan_barang_medis (id),
-    FOREIGN KEY (id_satuan) REFERENCES ref.satuan_barang_medis (id),
-    FOREIGN KEY (updater) REFERENCES akun (id)
+    FOREIGN KEY (id_satuan) REFERENCES ref.satuan_barang_medis (id)
 );
 
 -- Data Batch
@@ -366,13 +322,8 @@ CREATE TABLE IF NOT EXISTS data_batch ( --get by no_batch
     h_karyawan FLOAT NOT NULL DEFAULT 0,
     jumlahbeli INT NOT NULL,
     sisa INT NOT NULL,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    deleted_at TIMESTAMP WITH TIME ZONE,
-    updater UUID, 
     PRIMARY KEY (no_batch, id_barang_medis, no_faktur),
-    FOREIGN KEY (id_barang_medis) REFERENCES barang_medis (id),
-    FOREIGN KEY (updater) REFERENCES akun (id)
+    FOREIGN KEY (id_barang_medis) REFERENCES barang_medis (id)
 );
 -- CREATE TYPE sik.jenis_barang_medis AS ENUM ('Obat', 'Alat Kesehatan', 'Bahan Habis Pakai', 'Darah');
 
