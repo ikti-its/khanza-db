@@ -236,7 +236,7 @@ CREATE TABLE IF NOT EXISTS mutasi_barang(
     keterangan VARCHAR(60) NOT NULL DEFAULT '-',
     no_batch VARCHAR(20),
     no_faktur VARCHAR(20),
-    PRIMARY KEY (id_barang_medis, id_ruangandari, id_ruanganke),
+    PRIMARY KEY (id_barang_medis, id_ruangandari, id_ruanganke, tanggal, no_batch, no_faktur),
     FOREIGN KEY (id_barang_medis) REFERENCES barang_medis (id),
     FOREIGN KEY (id_ruangandari) REFERENCES ref.ruangan (id),
     FOREIGN KEY (id_ruanganke) REFERENCES ref.ruangan (id)
