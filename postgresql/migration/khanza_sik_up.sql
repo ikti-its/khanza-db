@@ -208,7 +208,7 @@ CREATE TABLE IF NOT EXISTS opname (
     keterangan VARCHAR(60) NOT NULL DEFAULT '-',
     no_batch VARCHAR(20),
     no_faktur VARCHAR(20),
-    PRIMARY KEY (id_barang_medis, id_ruangan),
+    PRIMARY KEY (id_barang_medis, id_ruangan, tanggal, id_ruangan, no_batch, no_faktur),
     FOREIGN KEY (id_barang_medis) REFERENCES barang_medis (id),
     FOREIGN KEY (id_ruangan) REFERENCES ref.ruangan (id)
 );
@@ -236,7 +236,7 @@ CREATE TABLE IF NOT EXISTS mutasi_barang(
     keterangan VARCHAR(60) NOT NULL DEFAULT '-',
     no_batch VARCHAR(20),
     no_faktur VARCHAR(20),
-    PRIMARY KEY (id_barang_medis),
+    PRIMARY KEY (id_barang_medis, id_ruangandari, id_ruanganke),
     FOREIGN KEY (id_barang_medis) REFERENCES barang_medis (id),
     FOREIGN KEY (id_ruangandari) REFERENCES ref.ruangan (id),
     FOREIGN KEY (id_ruanganke) REFERENCES ref.ruangan (id)
@@ -290,12 +290,13 @@ CREATE TABLE IF NOT EXISTS detail_penerimaan_barang_medis ( --getbyid penerimaan
     id_satuan INT NOT NULL,
     ubah_master status_ubah_master NOT NULL DEFAULT '0',
     jumlah INT NOT NULL,
+    h_pesan FLOAT NOT NULL DEFAULT 0,
     subtotal_per_item FLOAT NOT NULL DEFAULT 0,
     diskon_persen FLOAT NOT NULL DEFAULT 0,
     diskon_jumlah FLOAT NOT NULL DEFAULT 0,
     total_per_item FLOAT NOT NULL DEFAULT 0,
     jumlah_diterima INT NOT NULL DEFAULT 0,
-    kadaluwarsa DATE,
+    kadaluwarsa DATE NULL,
     no_batch VARCHAR(20),
     PRIMARY KEY (id_penerimaan, id_barang_medis),
     FOREIGN KEY (id_barang_medis) REFERENCES barang_medis (id),
