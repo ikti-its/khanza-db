@@ -278,6 +278,10 @@ CREATE TABLE IF NOT EXISTS penerimaan_barang_medis (
     tanggal_jthtempo DATE NOT NULL,
     id_pegawai UUID NOT NULL, 
     id_ruangan INT NOT NULL,
+    pajak_persen FLOAT NOT NULL,
+    pajak_jumlah FLOAT NOT NULL,
+    tagihan FLOAT NOT NULL,
+    materai FLOAT NOT NULL,
     FOREIGN KEY (id_pegawai) REFERENCES pegawai (id),
     FOREIGN KEY (id_ruangan) REFERENCES ref.ruangan (id)
 );
