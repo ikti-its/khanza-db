@@ -109,6 +109,24 @@ CREATE TABLE IF NOT EXISTS jadwal_pegawai (
     FOREIGN KEY (updater) REFERENCES akun (id)
 );
 
+-- Tukar Jadwal Pegawai
+CREATE TYPE status_tukar AS ENUM ('Ditolak', 'Menunggu', 'Diterima');
+
+CREATE TABLE IF NOT EXISTS tukar_jadwal (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    id_sender UUID NOT NULL,
+    id_recipient UUID NOT NULL,
+    id_hari INT NOT NULL,
+    id_shift_sender VARCHAR(2) NOT NULL,
+    id_shift_recipient VARCHAR(2) NOT NULL,
+    status status_tukar DEFAULT 'Menunggu',
+    FOREIGN KEY (id_sender) REFERENCES pegawai (id),
+    FOREIGN KEY (id_recipient) REFERENCES pegawai (id),
+    FOREIGN KEY (id_hari) REFERENCES ref.hari (id),
+    FOREIGN KEY (id_shift_sender) REFERENCES ref.shift (id),
+    FOREIGN KEY (id_shift_recipient) REFERENCES ref.shift (id)
+);
+
 -- Presensi
 CREATE TABLE IF NOT EXISTS presensi (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -199,6 +217,7 @@ CREATE TABLE IF NOT EXISTS barang_medis (
 
 -- Opname
 CREATE TABLE IF NOT EXISTS opname (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     id_barang_medis UUID, 
     id_ruangan INT NOT NULL,
     h_beli FLOAT NOT NULL DEFAULT 0,
@@ -208,25 +227,25 @@ CREATE TABLE IF NOT EXISTS opname (
     keterangan VARCHAR(60) NOT NULL DEFAULT '-',
     no_batch VARCHAR(20),
     no_faktur VARCHAR(20),
-    PRIMARY KEY (id_barang_medis, id_ruangan, tanggal, id_ruangan, no_batch, no_faktur),
     FOREIGN KEY (id_barang_medis) REFERENCES barang_medis (id),
     FOREIGN KEY (id_ruangan) REFERENCES ref.ruangan (id)
 );
 
 -- Gudang Barang
 CREATE TABLE IF NOT EXISTS gudang_barang(
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     id_barang_medis UUID, 
     id_ruangan INT NOT NULL,
     stok INT NOT NULL,
     no_batch VARCHAR(20),
     no_faktur VARCHAR(20),
-    PRIMARY KEY (id_barang_medis, id_ruangan),
     FOREIGN KEY (id_barang_medis) REFERENCES barang_medis (id),
     FOREIGN KEY (id_ruangan) REFERENCES ref.ruangan (id)
 );
 
 -- Mutasi Barang
 CREATE TABLE IF NOT EXISTS mutasi_barang(
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     id_barang_medis UUID,
     jumlah INT NOT NULL,
     harga FLOAT NOT NULL,
@@ -236,7 +255,6 @@ CREATE TABLE IF NOT EXISTS mutasi_barang(
     keterangan VARCHAR(60) NOT NULL DEFAULT '-',
     no_batch VARCHAR(20),
     no_faktur VARCHAR(20),
-    PRIMARY KEY (id_barang_medis, id_ruangandari, id_ruanganke, tanggal, no_batch, no_faktur),
     FOREIGN KEY (id_barang_medis) REFERENCES barang_medis (id),
     FOREIGN KEY (id_ruangandari) REFERENCES ref.ruangan (id),
     FOREIGN KEY (id_ruanganke) REFERENCES ref.ruangan (id)
