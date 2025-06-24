@@ -101,7 +101,8 @@ BEGIN
         -- Add audit columns to insert
         column_names := column_names || 'changed_by, action, changed_at';
         insert_columns := insert_columns || 'changed_by, action, changed_at';
-        insert_values := insert_values || '1,TG_OP, CURRENT_TIMESTAMP';
+        insert_values := insert_values || 'COALESCE(current_setting(''my.user_id'', true)::UUID, ''00000000-0000-0000-0000-000000000000''::UUID),TG_OP, CURRENT_TIMESTAMP';
+
 
         -- Create or replace trigger function
         EXECUTE format($func$
