@@ -11,7 +11,8 @@ DECLARE
     column_defs text;
     column_names text;
     insert_columns text;
-    insert_values text;
+    insert_values_new text;
+    insert_values_old text;
 BEGIN
     FOR tbl IN
         SELECT table_schema, table_name
@@ -71,7 +72,7 @@ BEGIN
 	        );
 	    END LOOP;
 	    -- Add audit columns at the end
-	    column_defs := column_defs || 'changed_by integer NOT NULL, action VARCHAR(10) NOT NULL, changed_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP';
+	    column_defs := column_defs || 'changed_by UUID NOT NULL, action VARCHAR(10) NOT NULL, changed_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP';
 
 	    -- Create audit table
 	    EXECUTE format('CREATE TABLE %I.%I (%s)', schema_name, audit_tbl_name, column_defs);
@@ -85,41 +86,51 @@ BEGIN
         -- Build the column list for INSERT statement
         column_names := '';
         insert_columns := '';
-        insert_values := '';
+        insert_values_new := '';
+        insert_values_old := '';
         FOR col IN
-            SELECT column_name
-            FROM information_schema.columns
-            WHERE table_schema = schema_name
-              AND table_name = tbl.table_name
-            ORDER BY ordinal_position
-        LOOP
-            column_names := column_names || format('%I, ', col.column_name);
-            insert_columns := insert_columns || format('%I, ', col.column_name);
-            insert_values := insert_values || format('NEW.%I, ', col.column_name);
-        END LOOP;
+    SELECT column_name
+    FROM information_schema.columns
+    WHERE table_schema = schema_name
+      AND table_name = tbl.table_name
+    ORDER BY ordinal_position
+    LOOP
+        column_names := column_names || format('%I, ', col.column_name);
+        insert_columns := insert_columns || format('%I, ', col.column_name);
+        insert_values_new := insert_values_new || format('NEW.%I, ', col.column_name);
+        insert_values_old := insert_values_old || format('OLD.%I, ', col.column_name);
+    END LOOP;
+
 
         -- Add audit columns to insert
         column_names := column_names || 'changed_by, action, changed_at';
         insert_columns := insert_columns || 'changed_by, action, changed_at';
-        insert_values := insert_values || 'COALESCE(current_setting(''my.user_id'', true)::UUID, ''00000000-0000-0000-0000-000000000000''::UUID),TG_OP, CURRENT_TIMESTAMP';
+        insert_values_new := insert_values_new || 'COALESCE(current_setting(''my.user_id'', true)::UUID, ''00000000-0000-0000-0000-000000000000''::UUID),TG_OP, CURRENT_TIMESTAMP';
+        insert_values_old := insert_values_old || 'COALESCE(current_setting(''my.user_id'', true)::UUID, ''00000000-0000-0000-0000-000000000000''::UUID),TG_OP, CURRENT_TIMESTAMP';
 
 
         -- Create or replace trigger function
         EXECUTE format($func$
-            CREATE FUNCTION %I.%I() RETURNS trigger AS
-            $body$
-            BEGIN
-				INSERT INTO %I.%I (%s) VALUES (%s);
-                IF TG_OP = 'INSERT' OR TG_OP = 'UPDATE' THEN
-                    RETURN NEW;
-                ELSIF TG_OP = 'DELETE' THEN
-                    RETURN OLD;
-                END IF;
-                RETURN NULL;
-            END;
-            $body$
-            LANGUAGE plpgsql;
-        $func$, schema_name, trigger_fn_name, schema_name, audit_tbl_name, insert_columns, insert_values);
+        CREATE FUNCTION %I.%I() RETURNS trigger AS
+        $body$
+        BEGIN
+            IF TG_OP = 'INSERT' OR TG_OP = 'UPDATE' THEN
+                INSERT INTO %I.%I (%s) VALUES (%s);
+                RETURN NEW;
+            ELSIF TG_OP = 'DELETE' THEN
+                INSERT INTO %I.%I (%s) VALUES (%s);
+                RETURN OLD;
+            END IF;
+            RETURN NULL;
+        END;
+        $body$
+        LANGUAGE plpgsql;
+        $func$, 
+            schema_name, trigger_fn_name,
+            schema_name, audit_tbl_name, insert_columns, insert_values_new,  -- for INSERT/UPDATE
+            schema_name, audit_tbl_name, insert_columns, insert_values_old   -- for DELETE
+        );
+
 
         -- Create trigger
         EXECUTE format('
