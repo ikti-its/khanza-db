@@ -41,13 +41,13 @@ BEGIN
 	    -- Build the column definitions for audit table by copying from base table
 	    column_defs := '';
 	    FOR col IN
-	        SELECT column_name, data_type, udt_name, is_nullable, character_maximum_length, numeric_precision, numeric_scale, column_default
+	        SELECT column_name, data_type, udt_name, character_maximum_length, numeric_precision, numeric_scale
 	        FROM information_schema.columns
 	        WHERE table_schema = schema_name
 	          AND table_name = tbl.table_name
 	        ORDER BY ordinal_position
 		LOOP
-	        column_defs := column_defs || format('%I %s%s%s%s, ',
+	        column_defs := column_defs || format('%I %s%s, ',
 	            col.column_name,
 	            -- Map information_schema data_type to PostgreSQL data types with length/precision
 	            CASE
@@ -66,8 +66,6 @@ BEGIN
 					WHEN col.data_type = 'USER-DEFINED' THEN format('%s', col.udt_name)
 	                ELSE col.data_type
 	            END,
-	            CASE WHEN col.is_nullable = 'NO' THEN ' NOT NULL' ELSE '' END,
-	            CASE WHEN col.column_default IS NOT NULL THEN ' DEFAULT ' || col.column_default ELSE '' END,
 	            ''
 	        );
 	    END LOOP;
