@@ -70,7 +70,7 @@ BEGIN
 	        );
 	    END LOOP;
 	    -- Add audit columns at the end
-	    column_defs := column_defs || 'changed_by UUID NOT NULL, action VARCHAR(10) NOT NULL, changed_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP';
+	    column_defs := column_defs || 'changed_by UUID NOT NULL, user_ip TEXT, action VARCHAR(10) NOT NULL, changed_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP';
 
 	    -- Create audit table
 	    EXECUTE format('CREATE TABLE %I.%I (%s)', schema_name, audit_tbl_name, column_defs);
@@ -101,10 +101,10 @@ BEGIN
 
 
         -- Add audit columns to insert
-        column_names := column_names || 'changed_by, action, changed_at';
-        insert_columns := insert_columns || 'changed_by, action, changed_at';
-        insert_values_new := insert_values_new || 'COALESCE(current_setting(''my.user_id'', true)::UUID, ''00000000-0000-0000-0000-000000000000''::UUID),TG_OP, CURRENT_TIMESTAMP';
-        insert_values_old := insert_values_old || 'COALESCE(current_setting(''my.user_id'', true)::UUID, ''00000000-0000-0000-0000-000000000000''::UUID),TG_OP, CURRENT_TIMESTAMP';
+        column_names   := column_names || 'changed_by, user_ip, action, changed_at';
+        insert_columns := insert_columns || 'changed_by, user_ip, action, changed_at';
+        insert_values_new := insert_values_new || 'COALESCE(current_setting(''my.user_id'', true)::UUID, ''00000000-0000-0000-0000-000000000000''::UUID),COALESCE(current_setting(''my.ip_address'', true))::text, TG_OP, CURRENT_TIMESTAMP';
+        insert_values_old := insert_values_old || 'COALESCE(current_setting(''my.user_id'', true)::UUID, ''00000000-0000-0000-0000-000000000000''::UUID),COALESCE(current_setting(''my.ip_address'', true))::text, TG_OP, CURRENT_TIMESTAMP';
 
 
         -- Create or replace trigger function
