@@ -12,7 +12,7 @@ BEGIN
     LOOP
         -- Drop only the trigger
         EXECUTE format('DROP TRIGGER IF EXISTS %I ON %I.%I', 
-            tbl.table_name || '_trigger', tbl.table_schema, tbl.table_name
+            tbl.table_name || '_trigger', tbl.table_schema, REPLACE(tbl.table_name, '_audit', '_encrypted')
         );
         -- Drop only the function
         -- Note: You must drop the trigger before dropping the function

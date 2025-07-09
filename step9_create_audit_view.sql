@@ -8,16 +8,14 @@ DECLARE
     encryption_key TEXT := 'BismillahSidangNilaiA';
     audit_view_name TEXT;
     audit_table_name TEXT;
-    audit_insert_columns text;
-    audit_insert_values text;
-    audit_update_assignments text;
+    extra_audit_view_values TEXT;
 BEGIN
     FOR tbl IN
         SELECT table_schema, table_name
         FROM information_schema.tables
         WHERE table_type = 'BASE TABLE' --only include tables
             AND table_schema NOT IN ('pg_catalog', 'information_schema') -- exclude system tables
-            AND table_name LIKE '%_encrypted'-- include _audit only
+            AND table_name LIKE '%_structure'-- include _structure only
     LOOP    
         RAISE NOTICE '%', tbl.table_name;
         -- Find the primary keys in each table
@@ -31,11 +29,8 @@ BEGIN
         WHERE tc.table_schema = tbl.table_schema
             AND tc.table_name = tbl.table_name
             AND tc.constraint_type = 'PRIMARY KEY';
-        RAISE NOTICE '%', pk_columns;
 
         decrypt_select := '';
-        audit_insert_columns := '';
-        audit_insert_values := '';
 
         FOR col IN
             SELECT column_name, data_type, udt_name
@@ -48,39 +43,29 @@ BEGIN
                 decrypt_select := decrypt_select || 
                     format('%I, ', col.column_name
                 );
-                -- Handle INSERTs
-                audit_insert_columns := audit_insert_columns || 
-                    format('%I, ', col.column_name
-                );
-                audit_insert_values := audit_insert_values || 
-                    format('NEW.%I, ', col.column_name
-                );
             ELSE
                 -- Handle SELECTs
-                decrypt_select := decrypt_select || format('pgp_sym_decrypt(%I, ''%s'')::%s AS %I, ',
+                decrypt_select := decrypt_select || format('pgp_sym_decrypt(%I, ''%s'')::bytea AS %I, ',
                     col.column_name, encryption_key,
-                    CASE WHEN col.data_type = 'USER-DEFINED' THEN col.udt_name ELSE col.data_type END,
                     col.column_name
-                );
-                -- Handle INSERTs
-                audit_insert_columns := audit_insert_columns || 
-                    format('%I, ', col.column_name
-                );
-                audit_insert_values := audit_insert_values || 
-                    format('pgp_sym_encrypt(NEW.%I::text, ''%s''), ', col.column_name, encryption_key
                 );
             END IF;
         END LOOP;
 
-        RAISE NOTICE '%', audit_insert_columns;
-        RAISE NOTICE '%', audit_insert_values;
-
-        decrypt_select := left(decrypt_select, length(decrypt_select) - 2);
-        audit_insert_columns := left(audit_insert_columns, length(audit_insert_columns) - 2);
-        audit_insert_values := left(audit_insert_values, length(audit_insert_values) - 2);
-       
-        audit_view_name = REPLACE(tbl.table_name, '_encrypted', '_audit_view');
-        audit_table_name = REPLACE(tbl.table_name, '_encrypted', '_audit');
+        RAISE NOTICE '%', decrypt_select;
+        extra_audit_view_values := format(
+            'pgp_sym_decrypt(changed_by, ''%s'')::UUID AS changed_by,'
+            'pgp_sym_decrypt(user_ip, ''%s'')::TEXT AS user_ip,'
+            'pgp_sym_decrypt(action, ''%s'')::VARCHAR(10) AS action,'
+            'pgp_sym_decrypt(changed_at, ''%s'')::TIMESTAMPTZ AS changed_at', 
+            encryption_key,
+            encryption_key, 
+            encryption_key, 
+            encryption_key);
+        
+        decrypt_select := decrypt_select || extra_audit_view_values;
+        audit_view_name  = REPLACE(tbl.table_name, '_structure', '_audit_view');
+        audit_table_name = REPLACE(tbl.table_name, '_structure', '_audit');
 
         -- Create view based on _audit tables
         EXECUTE format('

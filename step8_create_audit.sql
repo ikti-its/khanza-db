@@ -13,8 +13,10 @@ DECLARE
     audit_insert_values_new text;
     audit_insert_values_old text;
 
+    extra_audit_values TEXT;
+    extra_audit_column_defs TEXT;
+
     current_column_defs TEXT;
-    encrypt_select TEXT;
     pk_columns TEXT[];
     encryption_key TEXT := 'BismillahSidangNilaiA';
 
@@ -42,7 +44,6 @@ BEGIN
 
         current_column_defs := '';
         audit_column_defs := '';
-        encrypt_select := '';
         audit_table_name := REPLACE(tbl.table_name, '_encrypted', '_audit');
         audit_function_name := audit_table_name || '_function';
         audit_trigger_name := audit_table_name || '_trigger';
@@ -83,18 +84,22 @@ BEGIN
 
             IF pk_columns IS NOT NULL AND col.column_name = ANY(pk_columns) THEN
                 audit_column_defs := audit_column_defs || current_column_defs;
-                -- encrypt_select := encrypt_select || format('%I, ', col.column_name);
             ELSE
                 audit_column_defs := audit_column_defs || format('%I BYTEA, ', col.column_name);
-                -- encrypt_select := encrypt_select || format('pgp_sym_encrypt(%I::text, ''%s''), ', col.column_name, encryption_key);
             END IF;
         END LOOP;
         
-        audit_column_defs := left(audit_column_defs, length(audit_column_defs) - 2);
-        encrypt_select := left(encrypt_select, length(encrypt_select) - 2);
-        audit_insert_columns := left(audit_insert_columns, length(audit_insert_columns) - 2);
-        audit_insert_values_new := left(audit_insert_values_new, length(audit_insert_values_new) - 2);
-        audit_insert_values_old := left(audit_insert_values_old, length(audit_insert_values_old) - 2);
+        extra_audit_values := format(
+            'pgp_sym_encrypt(COALESCE(current_setting(''my.user_id'', true)::UUID, ''00000000-0000-0000-0000-000000000000''::UUID)::text, ''%s''),'
+            'pgp_sym_encrypt(COALESCE(current_setting(''my.ip_address'', true))::text, ''%s''),'
+            'pgp_sym_encrypt(TG_OP::text, ''%s''),'
+            'pgp_sym_encrypt(CURRENT_TIMESTAMP::text, ''%s'')', 
+            encryption_key, encryption_key, encryption_key, encryption_key);
+        extra_audit_column_defs := 'changed_by bytea, user_ip bytea, action bytea, changed_at bytea';
+	    audit_column_defs       := audit_column_defs       || extra_audit_column_defs;
+        audit_insert_columns    := audit_insert_columns    || 'changed_by, user_ip, action, changed_at';
+        audit_insert_values_new := audit_insert_values_new || extra_audit_values;
+        audit_insert_values_old := audit_insert_values_old || extra_audit_values;
 
         -- Create audit table
         EXECUTE format('CREATE TABLE IF NOT EXISTS %I.%I (%s);', 
