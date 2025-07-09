@@ -70,7 +70,7 @@ BEGIN
                 );
             ELSE
                 -- Handle SELECTs
-                decrypt_select := decrypt_select || format('pgp_sym_decrypt(%I, ''%s'')::%s AS %I, ',
+                decrypt_select := decrypt_select || format('convert_from(pgp_sym_decrypt(%I, ''%s'')::%s, ''UTF-8'') AS %I, ',
                     col.column_name, encryption_key,
                     CASE WHEN col.data_type = 'USER-DEFINED' THEN col.udt_name ELSE col.data_type END,
                     col.column_name

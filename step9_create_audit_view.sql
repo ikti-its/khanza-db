@@ -45,8 +45,10 @@ BEGIN
                 );
             ELSE
                 -- Handle SELECTs
-                decrypt_select := decrypt_select || format('pgp_sym_decrypt(%I, ''%s'')::bytea AS %I, ',
-                    col.column_name, encryption_key,
+                decrypt_select := decrypt_select || format('convert_from(pgp_sym_decrypt(%I, ''%s'')::bytea, ''UTF-8'')::%s AS %I, ',
+                    col.column_name, 
+                    encryption_key,
+                    CASE WHEN col.data_type = 'USER-DEFINED' THEN col.udt_name ELSE col.data_type END,
                     col.column_name
                 );
             END IF;
@@ -54,7 +56,7 @@ BEGIN
 
         RAISE NOTICE '%', decrypt_select;
         extra_audit_view_values := format(
-            'pgp_sym_decrypt(changed_by, ''%s'')::UUID AS changed_by,'
+            'convert_from(pgp_sym_decrypt(changed_by, ''%s'')::bytea, ''UTF-8'')::UUID AS changed_by,'
             'pgp_sym_decrypt(user_ip, ''%s'')::TEXT AS user_ip,'
             'pgp_sym_decrypt(action, ''%s'')::VARCHAR(10) AS action,'
             'pgp_sym_decrypt(changed_at, ''%s'')::TIMESTAMPTZ AS changed_at', 
