@@ -92,12 +92,13 @@ BEGIN
         extra_audit_values := format(
             'pgp_sym_encrypt(COALESCE(current_setting(''my.user_id'', true)::UUID, ''00000000-0000-0000-0000-000000000000''::UUID)::text, ''%s''),'
             'pgp_sym_encrypt(COALESCE(current_setting(''my.ip_address'', true))::text, ''%s''),'
+            'pgp_sym_encrypt(COALESCE(current_setting(''my.mac_address'', true))::text, ''%s''),'
             'pgp_sym_encrypt(TG_OP::text, ''%s''),'
             'pgp_sym_encrypt(CURRENT_TIMESTAMP::text, ''%s'')', 
-            encryption_key, encryption_key, encryption_key, encryption_key);
-        extra_audit_column_defs := 'changed_by bytea, user_ip bytea, action bytea, changed_at bytea';
+            encryption_key, encryption_key, encryption_key, encryption_key, encryption_key);
+        extra_audit_column_defs := 'changed_by bytea, user_ip bytea, user_mac bytea, action bytea, changed_at bytea';
 	    audit_column_defs       := audit_column_defs       || extra_audit_column_defs;
-        audit_insert_columns    := audit_insert_columns    || 'changed_by, user_ip, action, changed_at';
+        audit_insert_columns    := audit_insert_columns    || 'changed_by, user_ip, user_mac, action, changed_at';
         audit_insert_values_new := audit_insert_values_new || extra_audit_values;
         audit_insert_values_old := audit_insert_values_old || extra_audit_values;
 

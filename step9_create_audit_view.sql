@@ -58,11 +58,13 @@ BEGIN
         extra_audit_view_values := format(
             'convert_from(pgp_sym_decrypt(changed_by, ''%s'')::bytea, ''UTF-8'')::UUID AS changed_by,'
             'pgp_sym_decrypt(user_ip, ''%s'')::TEXT AS user_ip,'
+            'pgp_sym_decrypt(user_mac, ''%s'')::TEXT AS user_mac,'
             'pgp_sym_decrypt(action, ''%s'')::VARCHAR(10) AS action,'
             'pgp_sym_decrypt(changed_at, ''%s'')::TIMESTAMPTZ AS changed_at', 
             encryption_key,
             encryption_key, 
             encryption_key, 
+            encryption_key,
             encryption_key);
         
         decrypt_select := decrypt_select || extra_audit_view_values;
