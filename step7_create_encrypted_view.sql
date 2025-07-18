@@ -70,40 +70,41 @@ BEGIN
                     format('%I = OLD.%I AND ', col.column_name, col.column_name
                 );
             ELSE
-    -- Find the matching type from _structure
-    SELECT CASE 
-             WHEN data_type = 'USER-DEFINED' THEN udt_name 
-             ELSE data_type 
-           END
-    INTO structure_col_type
-    FROM information_schema.columns
-    WHERE table_schema = tbl.table_schema
-      AND table_name = REPLACE(tbl.table_name, '_encrypted', '_structure')
-      AND column_name = col.column_name;
+                -- Find the matching type from _structure
+                SELECT 
+                    CASE 
+                        WHEN data_type = 'USER-DEFINED' THEN udt_name 
+                        ELSE data_type 
+                    END
+                INTO structure_col_type
+                FROM information_schema.columns
+                WHERE table_schema = tbl.table_schema
+                    AND table_name = REPLACE(tbl.table_name, '_encrypted', '_structure')
+                    AND column_name = col.column_name;
 
-    IF structure_col_type IS NULL THEN
-        RAISE NOTICE '⚠️ No matching type found in structure for column %.%', tbl.table_name, col.column_name;
-        structure_col_type := 'text'; -- fallback to text
-    END IF;
+                IF structure_col_type IS NULL THEN
+                    RAISE NOTICE 'No matching type found in structure for column %.%', tbl.table_name, col.column_name;
+                    structure_col_type := 'text'; -- fallback to text
+                END IF;
 
-    -- Handle SELECTs
-    decrypt_select := decrypt_select || format(
-        'convert_from(pgp_sym_decrypt(%I, ''%s'')::bytea, ''UTF-8'')::%s AS %I, ',
-        col.column_name, encryption_key, structure_col_type, col.column_name
-    );
+                -- Handle SELECTs
+                decrypt_select := decrypt_select || format(
+                    'convert_from(pgp_sym_decrypt(%I, ''%s'')::bytea, ''UTF-8'')::%s AS %I, ',
+                    col.column_name, encryption_key, structure_col_type, col.column_name
+                );
 
-    -- Handle INSERTs
-    encrypted_insert_columns := encrypted_insert_columns || format('%I, ', col.column_name);
-    encrypted_insert_values := encrypted_insert_values || format(
-        'pgp_sym_encrypt(NEW.%I::text, ''%s''), ', col.column_name, encryption_key
-    );
+                -- Handle INSERTs
+                encrypted_insert_columns := encrypted_insert_columns || format('%I, ', col.column_name);
+                encrypted_insert_values := encrypted_insert_values || format(
+                    'pgp_sym_encrypt(NEW.%I::text, ''%s''), ', col.column_name, encryption_key
+                );
 
-    -- Handle UPDATEs
-    encrypted_update_assignments := encrypted_update_assignments || format(
-        '%I = pgp_sym_encrypt(NEW.%I::text, ''%s''), ', 
-        col.column_name, col.column_name, encryption_key
-    );
-END IF;
+                -- Handle UPDATEs
+                encrypted_update_assignments := encrypted_update_assignments || format(
+                    '%I = pgp_sym_encrypt(NEW.%I::text, ''%s''), ', 
+                    col.column_name, col.column_name, encryption_key
+                );
+            END IF;
 
         END LOOP;
 
